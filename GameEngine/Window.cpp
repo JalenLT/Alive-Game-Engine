@@ -26,6 +26,8 @@ void Window::initialize(int width, int height, const char* title) {
 		glfwMakeContextCurrent(window);
 
 		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+		glEnable(GL_DEPTH_TEST);
 	}
 }
 

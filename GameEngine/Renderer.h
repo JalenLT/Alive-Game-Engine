@@ -12,7 +12,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
-class Renderer : public Observer {
+class Renderer {
 public:
 	const char* vertexShaderSource = R"(
 		#version 330 core
@@ -106,6 +106,8 @@ public:
 
 		glBindVertexArray(0);
 	}
+
+	Renderer(): VAO(0), VBO(0), EBO(0) {}
 };
 
 #endif

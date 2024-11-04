@@ -6,13 +6,15 @@
 
 class InspectorWindow : public UIWindow {
 public:
-	void render() {
+	InspectorWindow(float x = 0.0f, float y = 0.0f, float width = 300.0f, float height = 400.0f) : UIWindow(x, y, width, height) {};
+	
+	void render() override {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 
-		ImGui::SetNextWindowPos(ImVec2(Window::getInstance().getMode()->width - (Window::getInstance().getMode()->width * 0.2), 0), ImGuiCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Window::getInstance().getMode()->width * 0.2, Window::getInstance().getMode()->height));
-		ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(width, height));
+		ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground);
 		ImGui::Text("This is a test");
 		ImGui::End();
 
