@@ -14,6 +14,12 @@
 
 class Renderer {
 public:
+	unsigned int shaderProgram = 0;
+
+	unsigned int VAO, VBO, EBO;
+	std::vector<float> vertices;
+	std::vector<unsigned int> indices;
+
 	const char* vertexShaderSource = R"(
 		#version 330 core
 		layout(location = 0) in vec3 aPos;
@@ -36,10 +42,6 @@ public:
 			FragColor = vec4(1.0, 0.5, 0.2, 1.0);
 		}
 	)";
-
-	unsigned int VAO, VBO, EBO;
-	std::vector<float> vertices;
-	std::vector<unsigned int> indices;
 
 	void loadModel(const std::string& path) {
 		Assimp::Importer importer;
@@ -107,7 +109,62 @@ public:
 		glBindVertexArray(0);
 	}
 
-	Renderer(): VAO(0), VBO(0), EBO(0) {}
+	void initializeShader(const char* vertexShaderSource, const char* fragmentShaderSource) {
+		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+		glCompileShader(vertexShader);
+
+		unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+		glCompileShader(fragmentShader);
+
+		shaderProgram = glCreateProgram();
+		glAttachShader(shaderProgram, vertexShader);
+		glAttachShader(shaderProgram, fragmentShader);
+		glLinkProgram(shaderProgram);
+
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+	}
+
+	glm::mat4 getModel() { return model; }
+
+	glm::mat4 getView() { return view; }
+
+	glm::mat4 getProjection() { return projection; }
+
+	void setModel(glm::mat4 model) { this->model = model; }
+
+	void setView(glm::mat4 view) { this->view = view; }
+
+	void setProjection(glm::mat4 projection) { this->projection = projection; }
+
+	void passMatricesToShader() {
+		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
+		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+		unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(getModel()));
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(getView()));
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(getProjection()));
+	}
+
+	void renderModel() {
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+
+	Renderer(): VAO(0), VBO(0), EBO(0), model(glm::mat4(1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f))), projection(glm::perspective(glm::radians(45.0f), (float)(UserInterfaceManager::getInstance().sceneWindow.width / UserInterfaceManager::getInstance().sceneWindow.height), 0.1f, 100.0f)) {}
+
+	~Renderer() {
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &EBO);
+		glDeleteProgram(shaderProgram);
+	}
+
+private:
+	glm::mat4 model, view, projection;
 };
 
 #endif
