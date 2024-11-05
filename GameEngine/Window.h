@@ -25,6 +25,10 @@ public:
 
 	GLFWwindow* getWindow();
 
+	int getWindowWidth();
+
+	int getWindowHeight();
+
 private:
 	GLFWwindow* window = nullptr;
 	GLFWmonitor* monitor = nullptr;

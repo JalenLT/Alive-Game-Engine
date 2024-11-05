@@ -18,10 +18,11 @@
 class UserInterfaceManager {
 public:
 	std::vector<UIWindow*> windows;
-	InspectorWindow inspectorWindow{Window::getInstance().getMode()->width - (Window::getInstance().getMode()->width * 0.2f), 0.0f, Window::getInstance().getMode()->width * 0.2f, Window::getInstance().getMode()->height * 1.0f};
-	HierarchyWindow hierarchyWindow{0.0f, 0.0f, Window::getInstance().getMode()->width * 0.2f, Window::getInstance().getMode()->height * 0.65f };
-	FileBrowserWindow fileBrowserWindow{0.0f, Window::getInstance().getMode()->height * 0.65f, Window::getInstance().getMode()->width * 0.8f, Window::getInstance().getMode()->width * 0.35f};
-	SceneWindow sceneWindow{Window::getInstance().getMode()->width * 0.2f, 0.0f, Window::getInstance().getMode()->width * 0.6f, Window::getInstance().getMode()->height * 0.65f };
+
+	InspectorWindow inspectorWindow{Window::getInstance().getWindowWidth() - (Window::getInstance().getWindowWidth() * 0.2f), 0.0f, Window::getInstance().getWindowWidth() * 0.2f, Window::getInstance().getWindowHeight() * 1.0f};
+	HierarchyWindow hierarchyWindow{0.0f, 0.0f, Window::getInstance().getWindowWidth() * 0.2f, Window::getInstance().getWindowHeight() * 0.65f };
+	FileBrowserWindow fileBrowserWindow{0.0f, Window::getInstance().getWindowHeight() * 0.65f, Window::getInstance().getWindowWidth() * 0.8f, Window::getInstance().getWindowWidth() * 0.35f};
+	SceneWindow sceneWindow{Window::getInstance().getWindowWidth() * 0.2f, 0.0f, Window::getInstance().getWindowWidth() * 0.6f, Window::getInstance().getWindowHeight() * 0.65f };
 
 	static UserInterfaceManager& getInstance() {
 		static UserInterfaceManager instance;

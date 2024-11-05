@@ -76,6 +76,18 @@ GLFWwindow* Window::getWindow() {
 	return window;
 }
 
+int Window::getWindowWidth() {
+	int width, height;
+	glfwGetWindowSize(Window::getInstance().getWindow(), &width, &height);
+	return width;
+}
+
+int Window::getWindowHeight() {
+	int width, height;
+	glfwGetWindowSize(Window::getInstance().getWindow(), &width, &height);
+	return height;
+}
+
 Window::Window() {}
 
 Window::~Window() {

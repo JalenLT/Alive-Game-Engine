@@ -13,6 +13,9 @@ public:
 	}
 
 	void render() override {
+		int windowWidth, windowHeight;
+		glfwGetWindowSize(Window::getInstance().getWindow(), &windowWidth, &windowHeight);
+
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 
@@ -27,9 +30,7 @@ public:
 
 		ImGui::PopStyleColor(2);
 
-		glViewport(x, Window::getInstance().getMode()->height - y - height, width, height);
-
-		std::cout << Window::getInstance().getMode()->width << " " << Window::getInstance().getMode()->height << " " << width << " " << height << std::endl;
+		glViewport(x, Window::getInstance().getWindowHeight() - y - height, width, height);
 	}
 };
 
