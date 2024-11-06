@@ -11,7 +11,11 @@ class FileBrowserWindow : public UIWindow {
 public:
 	FileBrowserWindow(float x = 0.0f, float y = 0.0f, float width = 300.0f, float height = 400.0f) : UIWindow(x, y, width, height) {};
 
-	void createFolder(const std::string& path) {
+	fs::directory_iterator getDirectoryIterator(const fs::path& directory) {
+		return fs::directory_iterator(directory);
+	}
+
+	void createFolder(const fs::path& path) {
 		try {
 			if (fs::create_directory(path)) {
 				std::cout << "Folder Created: " << path << std::endl;
@@ -35,12 +39,12 @@ public:
 		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(width, height));
 		ImGui::Begin("File Browser", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-		ImGui::Text("This is a test");
+		for (const auto& item : getDirectoryIterator("C:\\Users\\sseunarine\\AppData\\Roaming")) {
+			ImGui::Text(item.path().string().c_str());
+		}
 		ImGui::End();
 
 		ImGui::PopStyleColor(2);
-
-		createFolder("C:\\Users\\sseunarine\\AppData\\Roaming");
 	}
 };
 
