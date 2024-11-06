@@ -19,11 +19,10 @@ int main() {
 
         Renderer renderer;
         renderer.initializeShader(renderer.vertexShaderSource, renderer.fragmentShaderSource);
-        //renderer.loadModel("C:/Users/sseunarine/OneDrive/Desktop/cube.obj");
+        renderer.loadModel("C:/Users/sseunarine/OneDrive/Desktop/cube.obj");
         renderer.loadModel("C:/Users/sseunarine/OneDrive/Desktop/cylinder.obj");
-
-        //renderer.setModel(glm::rotate(renderer.getModel(), glm::radians(-45.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
-        //renderer.setView(glm::rotate(renderer.getView(), glm::radians(-45.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
+        renderer.gameObjects[0].get()->modelMatrix = glm::translate(renderer.gameObjects[0].get()->modelMatrix, glm::vec3(-2.0f, 0.0f, 0.0f));
+        renderer.gameObjects[1].get()->modelMatrix = glm::translate(renderer.gameObjects[1].get()->modelMatrix, glm::vec3(2.0f, 0.0f, 0.0f));
 
         while (!glfwWindowShouldClose(window)) {
             currentFrame = glfwGetTime();
@@ -35,12 +34,9 @@ int main() {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glUseProgram(renderer.shaderProgram);
-            renderer.setModel(glm::rotate(renderer.getModel(), deltaTime * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f)));
+            //renderer.setModel(glm::rotate(renderer.getModel(), deltaTime * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f)));
 
-            renderer.passMatricesToShader();
-
-            renderer.renderModel();
+            renderer.render();
 
             UserInterfaceManager::getInstance().render();
 

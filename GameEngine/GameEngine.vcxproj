@@ -134,8 +134,10 @@
   <ItemGroup>
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="FileBrowserWindow.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="InspectorWindow.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SceneWindow.h" />

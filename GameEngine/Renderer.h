@@ -11,14 +11,13 @@
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
+#include "GameObject.h"
 
 class Renderer {
 public:
 	unsigned int shaderProgram = 0;
 
-	unsigned int VAO, VBO, EBO;
-	std::vector<float> vertices;
-	std::vector<unsigned int> indices;
+	std::vector<std::unique_ptr<GameObject>> gameObjects;
 
 	const char* vertexShaderSource = R"(
 		#version 330 core
@@ -68,7 +67,7 @@ public:
 			vec3 diffuse = lightDiffuse * (materialDiffuse * diff);
 
 	        vec3 viewDir = normalize(viewPos - FragPos);
-			vec3 reflectDir = reflect(-lightDir, norm);
+			vec3 reflectDir = reflect(lightDir, norm);
 			float spec = pow(max(dot(viewDir, reflectDir), 0.0), materialShininess);
 			vec3 specular = lightSpecular * (materialSpecular * spec);
 
@@ -78,6 +77,7 @@ public:
 	)";
 
 	void loadModel(const std::string& path) {
+		auto gameObject = std::make_unique<GameObject>();
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
@@ -85,52 +85,53 @@ public:
 			return;
 		}
 
-		processNode(scene->mRootNode, scene);
+		processNode(scene->mRootNode, scene, gameObject.get());
+		gameObjects.push_back(std::move(gameObject));
 	}
 
-	void processNode(aiNode* node, const aiScene* scene) {
+	void processNode(aiNode* node, const aiScene* scene, GameObject* gameObject) {
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			processMesh(mesh, scene);
+			processMesh(mesh, scene, gameObject);
 		}
 
 		for (unsigned int i = 0; i < node->mNumChildren; i++) {
-			processNode(node->mChildren[i], scene);
+			processNode(node->mChildren[i], scene, gameObject);
 		}
 	}
 
-	void processMesh(aiMesh* mesh, const aiScene* scene) {
+	void processMesh(aiMesh* mesh, const aiScene* scene, GameObject* gameObject) {
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-			vertices.push_back(mesh->mVertices[i].x);
-			vertices.push_back(mesh->mVertices[i].y);
-			vertices.push_back(mesh->mVertices[i].z);
+			gameObject->vertices.push_back(mesh->mVertices[i].x);
+			gameObject->vertices.push_back(mesh->mVertices[i].y);
+			gameObject->vertices.push_back(mesh->mVertices[i].z);
 
 			if (mesh->mNormals) {
-				vertices.push_back(mesh->mNormals[i].x);
-				vertices.push_back(mesh->mNormals[i].y);
-				vertices.push_back(mesh->mNormals[i].z);
+				gameObject->vertices.push_back(mesh->mNormals[i].x);
+				gameObject->vertices.push_back(mesh->mNormals[i].y);
+				gameObject->vertices.push_back(mesh->mNormals[i].z);
 			}
 		}
 
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 			aiFace face = mesh->mFaces[i];
 			for (unsigned int j = 0; j < face.mNumIndices; j++) {
-				indices.push_back(face.mIndices[j]);
+				gameObject->indices.push_back(face.mIndices[j]);
 			}
 		}
 
 		// Setup OpenGL buffers
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-		glGenBuffers(1, &EBO);
+		glGenVertexArrays(1, &gameObject->VAO);
+		glGenBuffers(1, &gameObject->VBO);
+		glGenBuffers(1, &gameObject->EBO);
 
-		glBindVertexArray(VAO);
+		glBindVertexArray(gameObject->VAO);
 
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, gameObject->VBO);
+		glBufferData(GL_ARRAY_BUFFER, gameObject->vertices.size() * sizeof(float), &gameObject->vertices[0], GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gameObject->EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, gameObject->indices.size() * sizeof(unsigned int), &gameObject->indices[0], GL_STATIC_DRAW);
 
 		// Position attribute
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
@@ -173,39 +174,49 @@ public:
 
 	void setProjection(glm::mat4 projection) { this->projection = projection; }
 
-	void passMatricesToShader() {
+	void passMatricesToShader(GameObject* gameObject) {
 		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
 		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 		unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(getModel()));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(gameObject->modelMatrix));
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(getView()));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(getProjection()));
 
-		glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), 0.0f, -2.0f, -4.0f);
-		glUniform3f(glGetUniformLocation(shaderProgram, "lightAmbient"), 0.2f, 0.2f, 0.2f);
-		glUniform3f(glGetUniformLocation(shaderProgram, "lightDiffuse"), 0.5f, 0.5f, 0.5f);
-		glUniform3f(glGetUniformLocation(shaderProgram, "lightSpecular"), 1.0f, 1.0f, 1.0f);
+		// Position the light at the top-right
+		glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), 2.0f, 2.0f, -2.0f);
+		// Set light colors to a cool blue
+		glUniform3f(glGetUniformLocation(shaderProgram, "lightAmbient"), 0.1f, 0.1f, 0.3f);
+		glUniform3f(glGetUniformLocation(shaderProgram, "lightDiffuse"), 0.2f, 0.2f, 0.7f);
+		glUniform3f(glGetUniformLocation(shaderProgram, "lightSpecular"), 0.5f, 0.5f, 1.0f);
 
-		glUniform3f(glGetUniformLocation(shaderProgram, "materialAmbient"), 1.0f, 0.5f, 0.31f);
-		glUniform3f(glGetUniformLocation(shaderProgram, "materialDiffuse"), 1.0f, 0.5f, 0.31f);
-		glUniform3f(glGetUniformLocation(shaderProgram, "materialSpecular"), 0.5f, 0.5f, 0.5f);
-		glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), 10.0f);
+		// Optionally, set material to a neutral or contrasting color
+		glUniform3f(glGetUniformLocation(shaderProgram, "materialAmbient"), gameObject->material.ambient.x, gameObject->material.ambient.y, gameObject->material.ambient.z);
+		glUniform3f(glGetUniformLocation(shaderProgram, "materialDiffuse"), gameObject->material.diffuse.x, gameObject->material.diffuse.y, gameObject->material.diffuse.z);
+		glUniform3f(glGetUniformLocation(shaderProgram, "materialSpecular"), gameObject->material.specular.x, gameObject->material.specular.y, gameObject->material.specular.z);
+		glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), gameObject->material.shininess);
 
 		glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), 0.0f, 0.0f, -6.0f);
 	}
 
-	void renderModel() {
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	void renderModel(GameObject* gameObject) {
+		glBindVertexArray(gameObject->VAO);
+		glDrawElements(GL_TRIANGLES, gameObject->indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
-	Renderer(): VAO(0), VBO(0), EBO(0), model(glm::mat4(1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f))), projection(glm::perspective(glm::radians(45.0f), (float)(UserInterfaceManager::getInstance().sceneWindow.width / UserInterfaceManager::getInstance().sceneWindow.height), 0.1f, 100.0f)) {}
+	void render() {
+		glUseProgram(shaderProgram);
+
+		for (auto& gameObject : gameObjects){
+			passMatricesToShader(gameObject.get());
+
+			renderModel(gameObject.get());
+		}
+	}
+
+	Renderer(): model(glm::mat4(1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f))), projection(glm::perspective(glm::radians(45.0f), (float)(UserInterfaceManager::getInstance().sceneWindow.width / UserInterfaceManager::getInstance().sceneWindow.height), 0.1f, 100.0f)) {}
 
 	~Renderer() {
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &EBO);
 		glDeleteProgram(shaderProgram);
 	}
 
