@@ -19,6 +19,7 @@ int main() {
 
         Renderer renderer;
         renderer.initializeShader(renderer.vertexShaderSource, renderer.fragmentShaderSource);
+
         renderer.loadModel("C:/Users/sseunarine/OneDrive/Desktop/cube.obj");
         renderer.loadModel("C:/Users/sseunarine/OneDrive/Desktop/cylinder.obj");
         renderer.gameObjects[0].get()->modelMatrix = glm::translate(renderer.gameObjects[0].get()->modelMatrix, glm::vec3(-2.0f, 0.0f, 0.0f));
@@ -34,7 +35,8 @@ int main() {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            //renderer.setModel(glm::rotate(renderer.getModel(), deltaTime * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f)));
+            renderer.gameObjects[0].get()->modelMatrix = glm::rotate(renderer.gameObjects[0].get()->modelMatrix, deltaTime * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f));
+            renderer.gameObjects[1].get()->modelMatrix = glm::rotate(renderer.gameObjects[1].get()->modelMatrix, deltaTime * 1.0f, glm::vec3(-0.5f, -1.0f, 0.0f));
 
             renderer.render();
 

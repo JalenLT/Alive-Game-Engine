@@ -3,10 +3,27 @@
 #define FILEBROWSERWINDOW_H
 
 #include "UIWindow.h"
+#include <cstdlib>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 class FileBrowserWindow : public UIWindow {
 public:
 	FileBrowserWindow(float x = 0.0f, float y = 0.0f, float width = 300.0f, float height = 400.0f) : UIWindow(x, y, width, height) {};
+
+	void createFolder(const std::string& path) {
+		try {
+			if (fs::create_directory(path)) {
+				std::cout << "Folder Created: " << path << std::endl;
+			}
+			else {
+				std::cout << "Folder already created: " << path << std::endl;
+			}
+		}
+		catch (const fs::filesystem_error& e) {
+			std::cerr << "Error: " << e.what() << std::endl;
+		}
+	}
 	
 	void render() override {
 		int windowWidth, windowHeight;
@@ -22,6 +39,8 @@ public:
 		ImGui::End();
 
 		ImGui::PopStyleColor(2);
+
+		createFolder("C:\\Users\\sseunarine\\AppData\\Roaming");
 	}
 };
 
