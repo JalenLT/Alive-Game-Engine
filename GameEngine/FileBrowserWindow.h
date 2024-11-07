@@ -32,7 +32,7 @@ public:
 		}
 	}
 
-	void drawFolder(const char* name, const char* tooltip) {
+	void addFolder(const std::string name, const char* tooltip, bool goBack = false) {
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 		ImVec2 p = ImGui::GetCursorScreenPos();
 
@@ -41,14 +41,25 @@ public:
 		drawList->AddRectFilled(folderTop, ImVec2(folderTop.x + 50, folderTop.y + 20), IM_COL32(35, 57, 91, 255)); // Folder tab
 
 		if (ImGui::InvisibleButton("folder_btn", ImVec2(100, 70))) {
-			std::cout << "Folder button clicked!" << std::endl;
+			std::cout << name << std::endl;
+
+			if (goBack) {
+				std::cout << "here" << std::endl;
+				size_t pos = currentPath.find_last_of("\\/");
+				if (pos != std::string::npos) {
+					currentPath = currentPath.substr(0, pos);
+				}
+			} else {
+				std::cout << "there" << std::endl;
+				currentPath += "\\" + name;
+			}
 		}
 
 		if (ImGui::IsItemHovered()) {
 			ImGui::SetTooltip(tooltip);
 		}
 		ImVec2 textPos = ImVec2(p.x, p.y + 75);
-		drawList->AddText(textPos, IM_COL32(255, 255, 255, 255), name);
+		drawList->AddText(textPos, IM_COL32(255, 255, 255, 255), name.c_str());
 	}
 	
 	void render() override {
@@ -61,8 +72,10 @@ public:
 		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(width, height));
 		ImGui::Begin("File Browser", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-		for (const auto& item : getDirectoryIterator(basePath)) {
-			drawFolder(item.path().filename().string().c_str(), "Open Folder");
+		addFolder("...", "Back", true);
+		ImGui::SameLine();
+		for (const auto& item : getDirectoryIterator(currentPath)) {
+			addFolder(item.path().filename().string(), "Open Folder");
 			if (ImGui::GetCursorScreenPos().x < (width - 150)) {
 				ImGui::SameLine();
 			}
@@ -77,8 +90,10 @@ public:
 	}
 
 private:
-	std::string basePath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
-	std::string currentPath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
+	std::string basePath = "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive";
+	std::string currentPath = "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive";
+	/*std::string basePath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
+	std::string currentPath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";*/
 };
 
 #endif
