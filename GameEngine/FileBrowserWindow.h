@@ -57,13 +57,30 @@ public:
 		ImVec2 textPos = ImVec2(p.x, p.y + 75);
 		drawList->AddText(textPos, IM_COL32(255, 255, 255, 255), name.c_str());
 	}
+
+	void addFile(const std::string name) {
+		ImDrawList* drawList = ImGui::GetWindowDrawList();
+		ImVec2 p = ImGui::GetCursorScreenPos();
+
+		drawList->AddRectFilled(ImVec2(p.x + 20, p.y), ImVec2(p.x + 60, p.y + 70), IM_COL32(142, 168, 195, 255));
+		drawList->AddLine(ImVec2(p.x + 25, p.y + 10), ImVec2(p.x + 55, p.y + 10), IM_COL32(22, 25, 37, 255));
+		drawList->AddLine(ImVec2(p.x + 25, p.y + 20), ImVec2(p.x + 55, p.y + 20), IM_COL32(22, 25, 37, 255));
+		drawList->AddLine(ImVec2(p.x + 25, p.y + 30), ImVec2(p.x + 55, p.y + 30), IM_COL32(22, 25, 37, 255));
+		drawList->AddLine(ImVec2(p.x + 25, p.y + 40), ImVec2(p.x + 55, p.y + 40), IM_COL32(22, 25, 37, 255));
+
+		if (ImGui::InvisibleButton(name.c_str(), ImVec2(100, 70))) {
+			std::cout << "File: " << name << std::endl;
+		}
+
+		drawList->AddText(ImVec2(p.x, p.y + 75), IM_COL32(255, 255, 255, 255), name.c_str());
+	}
 	
 	void render() override {
 		int windowWidth, windowHeight;
 		glfwGetWindowSize(Window::getInstance().getWindow(), &windowWidth, &windowHeight);
 
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.086f, 0.098f, 0.145f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.056f, 0.038f, 0.015f, 1.0f));
 
 		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(width, height));
@@ -71,7 +88,12 @@ public:
 		addFolder("...", "Back", true);
 		ImGui::SameLine();
 		for (const auto& item : getDirectoryIterator(currentPath)) {
-			addFolder(item.path().filename().string(), "Open Folder");
+			if (item.path().extension().string() == "") {
+				addFolder(item.path().filename().string(), "Open Folder");
+			}
+			else {
+				addFile(item.path().filename().string());
+			}
 			if (ImGui::GetCursorScreenPos().x < (width - 150)) {
 				ImGui::SameLine();
 			}
