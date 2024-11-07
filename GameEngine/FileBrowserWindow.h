@@ -37,20 +37,16 @@ public:
 		ImVec2 p = ImGui::GetCursorScreenPos();
 
 		ImVec2 folderTop = ImVec2(p.x, p.y);
-		drawList->AddRectFilled(ImVec2(p.x, p.y + 10.0f), ImVec2(p.x + 100, p.y + 70), IM_COL32(64, 110, 142, 255)); // Main folder body
-		drawList->AddRectFilled(folderTop, ImVec2(folderTop.x + 50, folderTop.y + 20), IM_COL32(35, 57, 91, 255)); // Folder tab
+		drawList->AddRectFilled(ImVec2(p.x, p.y + 10.0f), ImVec2(p.x + 100, p.y + 70), IM_COL32(64, 110, 142, 255));
+		drawList->AddRectFilled(folderTop, ImVec2(folderTop.x + 50, folderTop.y + 20), IM_COL32(35, 57, 91, 255));
 
-		if (ImGui::InvisibleButton("folder_btn", ImVec2(100, 70))) {
-			std::cout << name << std::endl;
-
+		if (ImGui::InvisibleButton(name.c_str(), ImVec2(100, 70))) {
 			if (goBack) {
-				std::cout << "here" << std::endl;
 				size_t pos = currentPath.find_last_of("\\/");
 				if (pos != std::string::npos) {
 					currentPath = currentPath.substr(0, pos);
 				}
 			} else {
-				std::cout << "there" << std::endl;
 				currentPath += "\\" + name;
 			}
 		}
