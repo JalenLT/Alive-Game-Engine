@@ -12,6 +12,7 @@ public:
 	FileBrowserWindow(float x = 0.0f, float y = 0.0f, float width = 300.0f, float height = 400.0f) : UIWindow(x, y, width, height){
 		createFolder(basePath + "\\GameObjects");
 		createFolder(basePath + "\\Materials");
+		createFolder(basePath + "\\Models");
 	};
 
 	fs::directory_iterator getDirectoryIterator(const fs::path& directory) {
@@ -58,15 +59,27 @@ public:
 		drawList->AddText(textPos, IM_COL32(255, 255, 255, 255), name.c_str());
 	}
 
-	void addFile(const std::string name) {
+	void addFile(const std::string name, const std::string ext) {
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 		ImVec2 p = ImGui::GetCursorScreenPos();
 
-		drawList->AddRectFilled(ImVec2(p.x + 20, p.y), ImVec2(p.x + 60, p.y + 70), IM_COL32(142, 168, 195, 255));
-		drawList->AddLine(ImVec2(p.x + 25, p.y + 10), ImVec2(p.x + 55, p.y + 10), IM_COL32(22, 25, 37, 255));
-		drawList->AddLine(ImVec2(p.x + 25, p.y + 20), ImVec2(p.x + 55, p.y + 20), IM_COL32(22, 25, 37, 255));
-		drawList->AddLine(ImVec2(p.x + 25, p.y + 30), ImVec2(p.x + 55, p.y + 30), IM_COL32(22, 25, 37, 255));
-		drawList->AddLine(ImVec2(p.x + 25, p.y + 40), ImVec2(p.x + 55, p.y + 40), IM_COL32(22, 25, 37, 255));
+		if (ext == ".obj") {
+			drawList->AddRectFilled(ImVec2(p.x, p.y + 10.0f), ImVec2(p.x + 100, p.y + 70), IM_COL32(142, 168, 195, 255));
+
+			drawList->AddQuadFilled(ImVec2(p.x + 25, p.y + 30), ImVec2(p.x + 50, p.y + 40), ImVec2(p.x + 50, p.y + 65), ImVec2(p.x + 25, p.y + 55), IM_COL32(22, 25, 37, 255));
+			drawList->AddLine(ImVec2(p.x + 25, p.y + 30), ImVec2(p.x + 50, p.y + 20), IM_COL32(22, 25, 37, 255));
+			drawList->AddLine(ImVec2(p.x + 50, p.y + 40), ImVec2(p.x + 75, p.y + 30), IM_COL32(22, 25, 37, 255));
+			drawList->AddLine(ImVec2(p.x + 50, p.y + 64), ImVec2(p.x + 75, p.y + 55), IM_COL32(22, 25, 37, 255));
+			drawList->AddLine(ImVec2(p.x + 75, p.y + 55), ImVec2(p.x + 75, p.y + 30), IM_COL32(22, 25, 37, 255));
+			drawList->AddLine(ImVec2(p.x + 50, p.y + 20), ImVec2(p.x + 75, p.y + 30), IM_COL32(22, 25, 37, 255));
+		}
+		else {
+			drawList->AddRectFilled(ImVec2(p.x + 20, p.y), ImVec2(p.x + 60, p.y + 70), IM_COL32(142, 168, 195, 255));
+			drawList->AddLine(ImVec2(p.x + 25, p.y + 10), ImVec2(p.x + 55, p.y + 10), IM_COL32(22, 25, 37, 255));
+			drawList->AddLine(ImVec2(p.x + 25, p.y + 20), ImVec2(p.x + 55, p.y + 20), IM_COL32(22, 25, 37, 255));
+			drawList->AddLine(ImVec2(p.x + 25, p.y + 30), ImVec2(p.x + 55, p.y + 30), IM_COL32(22, 25, 37, 255));
+			drawList->AddLine(ImVec2(p.x + 25, p.y + 40), ImVec2(p.x + 55, p.y + 40), IM_COL32(22, 25, 37, 255));
+		}
 
 		if (ImGui::InvisibleButton(name.c_str(), ImVec2(100, 70))) {
 			std::cout << "File: " << name << std::endl;
@@ -92,7 +105,7 @@ public:
 				addFolder(item.path().filename().string(), "Open Folder");
 			}
 			else {
-				addFile(item.path().filename().string());
+				addFile(item.path().filename().string(), item.path().extension().string());
 			}
 			if (ImGui::GetCursorScreenPos().x < (width - 150)) {
 				ImGui::SameLine();
