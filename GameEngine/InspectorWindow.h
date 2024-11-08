@@ -4,9 +4,13 @@
 
 #include "UIWindow.h"
 
-class InspectorWindow : public UIWindow {
+class InspectorWindow : public UIWindow, public Observer {
 public:
 	InspectorWindow(float x = 0.0f, float y = 0.0f, float width = 300.0f, float height = 400.0f) : UIWindow(x, y, width, height) {};
+
+	void update(const std::string& event) override {
+		std::cout << "Event: " << event << std::endl;
+	}
 	
 	void render() override {
 		int windowWidth, windowHeight;

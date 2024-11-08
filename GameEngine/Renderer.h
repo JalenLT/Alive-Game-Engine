@@ -76,6 +76,11 @@ public:
 		}
 	)";
 
+	static Renderer& getInstance() {
+		static Renderer instance;
+		return instance;
+	}
+
 	void loadModel(const std::string& path) {
 		auto gameObject = std::make_unique<GameObject>();
 		Assimp::Importer importer;
@@ -162,13 +167,9 @@ public:
 		glDeleteShader(fragmentShader);
 	}
 
-	glm::mat4 getModel() { return model; }
-
 	glm::mat4 getView() { return view; }
 
 	glm::mat4 getProjection() { return projection; }
-
-	void setModel(glm::mat4 model) { this->model = model; }
 
 	void setView(glm::mat4 view) { this->view = view; }
 
@@ -214,14 +215,18 @@ public:
 		}
 	}
 
-	Renderer(): model(glm::mat4(1.0f)), view(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f))), projection(glm::perspective(glm::radians(45.0f), (float)(UserInterfaceManager::getInstance().sceneWindow.width / UserInterfaceManager::getInstance().sceneWindow.height), 0.1f, 100.0f)) {}
+private:
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)(UserInterfaceManager::getInstance().sceneWindow.width / UserInterfaceManager::getInstance().sceneWindow.height), 0.1f, 100.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));
 
+	Renderer() {}
+
+	Renderer(const Renderer&) = delete;
+
+	Renderer& operator=(const Renderer&) = delete;
 	~Renderer() {
 		glDeleteProgram(shaderProgram);
 	}
-
-private:
-	glm::mat4 model, view, projection;
 };
 
 #endif

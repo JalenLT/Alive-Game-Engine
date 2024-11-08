@@ -17,7 +17,7 @@ int main() {
         UserInterfaceManager::getInstance().initialize(window);
         UserInterfaceManager::getInstance().editorLayout();
 
-        Renderer renderer;
+        Renderer& renderer = Renderer::getInstance();
         renderer.initializeShader(renderer.vertexShaderSource, renderer.fragmentShaderSource);
 
         renderer.loadModel("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj");

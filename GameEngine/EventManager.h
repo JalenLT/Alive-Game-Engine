@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 
+
+
 class EventManager : public Subject {
 private:
 	std::vector<Observer*> observers;
