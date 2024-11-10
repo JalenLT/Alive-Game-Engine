@@ -4,6 +4,7 @@
 
 #include "imgui.h"
 #include "Window.h"
+#include "functional"
 
 class UIWindow {
 public:

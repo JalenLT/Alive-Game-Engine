@@ -8,8 +8,22 @@ class InspectorWindow : public UIWindow, public Observer {
 public:
 	InspectorWindow(float x = 0.0f, float y = 0.0f, float width = 300.0f, float height = 400.0f) : UIWindow(x, y, width, height) {};
 
-	void update(const std::string& event) override {
-		std::cout << "Event: " << event << std::endl;
+	void update(const EventData& data) override {
+		if (data.type == EventType::FileSelected) {
+			callback = [&]() {
+				ImGui::Text("GameObject");
+				ImGui::Text("Path: ");
+				ImGui::SameLine();
+				if (data.filePath) {
+					std::string pathStr = data.filePath->string();
+					ImGui::Text(pathStr.c_str());
+				}
+				else {
+					ImGui::Text("No file path available.");
+				}
+
+			};
+		}
 	}
 	
 	void render() override {
@@ -22,11 +36,21 @@ public:
 		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(width, height));
 		ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-		ImGui::Text("This is a test");
+
+		if (callback != nullptr) {
+			callback();
+		}
+		else {
+			ImGui::Text("...");
+		}
+
 		ImGui::End();
 
 		ImGui::PopStyleColor(2);
 	}
+
+private:
+	std::function<void()> callback = nullptr;
 };
 
 #endif

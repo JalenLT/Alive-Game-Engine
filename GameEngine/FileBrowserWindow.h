@@ -5,6 +5,7 @@
 #include "UIWindow.h"
 #include <cstdlib>
 #include <filesystem>
+#include "Event.h"
 namespace fs = std::filesystem;
 
 class FileBrowserWindow : public UIWindow {
@@ -82,7 +83,10 @@ public:
 		}
 
 		if (ImGui::InvisibleButton(name.c_str(), ImVec2(100, 70))) {
-			std::cout << "File: " << name << std::endl;
+			EventData data{ EventType::FileSelected };
+			data.filePath = fs::path(currentPath + "\\" + name);
+
+			EventManager::getInstance().notifyObservers(data);
 		}
 
 		drawList->AddText(ImVec2(p.x, p.y + 75), IM_COL32(255, 255, 255, 255), name.c_str());
@@ -121,10 +125,10 @@ public:
 	}
 
 private:
-	std::string basePath = "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive";
-	std::string currentPath = "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive";
-	/*std::string basePath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
-	std::string currentPath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";*/
+	/*std::string basePath = "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive";
+	std::string currentPath = "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive";*/
+	std::string basePath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
+	std::string currentPath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
 };
 
 #endif

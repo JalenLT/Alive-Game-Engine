@@ -8,8 +8,6 @@
 #include <iostream>
 #include <string>
 
-
-
 class EventManager : public Subject {
 private:
 	std::vector<Observer*> observers;
@@ -33,15 +31,15 @@ public:
 		observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
 	}
 
-	void notifyObservers(const std::string& event) override {
+	void notifyObservers(const EventData& data) override {
 		for (auto* observer : observers) {
-			observer->update(event);
+			observer->update(data);
 		}
 	}
 
-	void triggerEvent(const std::string& event) {
-		std::cout << "Event triggered" << event << std::endl;
-		notifyObservers(event);
+	void triggerEvent(const EventData& data) {
+		//std::cout << "Event triggered" << event << std::endl;
+		notifyObservers(data);
 	}
 };
 

@@ -133,15 +133,20 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Event.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="FileBrowserWindow.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="glm_serialization.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneWindow.h" />
+    <ClInclude Include="serialization_utils.h" />
     <ClInclude Include="UIWindow.h" />
     <ClInclude Include="UserInterfaceManager.h" />
     <ClInclude Include="Window.h" />

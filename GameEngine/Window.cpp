@@ -1,4 +1,5 @@
 #include "Window.h"
+#include <iostream>
 
 Window& Window::getInstance() {
 	static Window instance;

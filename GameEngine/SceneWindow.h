@@ -3,14 +3,13 @@
 #define SCENEWINDOW_H
 
 #include "UIWindow.h"
+#include "Event.h"
 
 class SceneWindow : public UIWindow, public Observer {
 public:
 	SceneWindow(float x = 0.0f, float y = 0.0f, float width = 300.0f, float height = 400.0f) : UIWindow(x, y, width, height) {}
 
-	void update(const std::string& event) override {
-		std::cout << "Event: " << event << std::endl;
-	}
+	void update(const EventData& data) override {}
 
 	void render() override {
 		int windowWidth, windowHeight;
@@ -21,12 +20,6 @@ public:
 
 		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(width, height));
-		ImGui::Begin("Scene", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground);
-		ImGui::Text("This is a test");
-		if (ImGui::Button("Event Test")) {
-			EventManager::getInstance().notifyObservers("button clicked in scene window");
-		}
-		ImGui::End();
 
 		ImGui::PopStyleColor(2);
 

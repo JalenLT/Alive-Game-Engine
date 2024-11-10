@@ -75,6 +75,7 @@ public:
 		addWindow(&sceneWindow);
 
 		EventManager::getInstance().addObserver(&sceneWindow);
+		EventManager::getInstance().addObserver(&inspectorWindow);
 	}
 
 private:
