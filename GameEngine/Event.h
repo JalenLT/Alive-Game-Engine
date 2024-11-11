@@ -5,9 +5,11 @@
 #include <optional>
 #include <string>
 #include <filesystem>
+#include <memory>
 
 enum class EventType {
-	FileSelected
+	FileSelected,
+	RefreshSceneHierarchy
 };
 
 struct EventData {

@@ -13,13 +13,15 @@
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/json.hpp>
 #include "glm_serialization.h"
-#include <memory> // For smart pointers
+#include <memory>
+#include <filesystem>
 
 class GameObject : public Observer {
 public:
     // OpenGL handles - Do not serialize
     unsigned int VAO, VBO, EBO;
 
+    std::string name;
     std::string path = "tmp";
     std::weak_ptr<GameObject> parent; // Changed from raw pointer to std::weak_ptr
     std::vector<float> vertices;
@@ -27,7 +29,7 @@ public:
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     Material material;
 
-    GameObject() : VAO(0), VBO(0), EBO(0) {};
+    GameObject() : VAO(0), VBO(0), EBO(0), name("Cube") {};
     ~GameObject() = default;
 
     void update(const EventData& data) override {}
@@ -108,6 +110,7 @@ public:
     template <class Archive>
     void serialize(Archive& ar) {
         ar(
+            CEREAL_NVP(name),
             CEREAL_NVP(path),
             CEREAL_NVP(modelMatrix),
             CEREAL_NVP(material)

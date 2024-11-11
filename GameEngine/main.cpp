@@ -21,10 +21,14 @@ int main() {
 
         SceneManager::getInstance().initialize();
         renderer.initializeShader(renderer.vertexShaderSource, renderer.fragmentShaderSource);
-        SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\USER\\OneDrive\\Documents\\OneDrive\\Desktop\\cube-Jalen.obj");
+        SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\USER\\OneDrive\\Documents\\OneDrive\\Desktop\\cube-Jalen.obj", "Cube Original");
 
         if (std::filesystem::exists("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json")) {
             SceneManager::getInstance().loadSceneFromFile("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json");
+
+            EventData data{ EventType::RefreshSceneHierarchy };
+
+            EventManager::getInstance().notifyObservers(data);
         }
 
         while (!glfwWindowShouldClose(window)) {

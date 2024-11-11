@@ -74,8 +74,8 @@ public:
 		addWindow(&fileBrowserWindow);
 		addWindow(&sceneWindow);
 
-		EventManager::getInstance().addObserver(&sceneWindow);
 		EventManager::getInstance().addObserver(&inspectorWindow);
+		EventManager::getInstance().addObserver(&hierarchyWindow);
 	}
 
 private:

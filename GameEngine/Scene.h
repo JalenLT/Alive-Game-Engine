@@ -19,8 +19,9 @@ public:
     std::vector<std::shared_ptr<GameObject>> gameObjects;
     std::string name;
 
-    void addGameObject(const std::string& path) {
+    void addGameObject(const std::string& path, const std::string& name) {
         auto gameObject = std::make_shared<GameObject>();
+        gameObject->name = name;
         gameObject->initialize(path);
         gameObjects.push_back(std::move(gameObject));
     }
@@ -52,7 +53,7 @@ public:
         // Reconstruct the shared pointers from the plain objects
         this->gameObjects.clear();
         for (const auto& obj : gameObjects) {
-            addGameObject(obj.path);
+            addGameObject(obj.path, obj.name);
             this->gameObjects.back()->modelMatrix = obj.modelMatrix;
         }
     }

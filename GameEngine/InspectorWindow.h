@@ -3,6 +3,7 @@
 #define INSPECTORWINDOW_H
 
 #include "UIWindow.h"
+#include "Observer.h"
 
 class InspectorWindow : public UIWindow, public Observer {
 public:
