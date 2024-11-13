@@ -5,6 +5,7 @@
 #include "UIWindow.h"
 #include "Observer.h"
 #include "SceneManager.h"
+#include "EventManager.h"
 
 class HierarchyWindow : public UIWindow, public Observer {
 public:
@@ -31,7 +32,11 @@ public:
 
 		if (scene != nullptr) {
 			for (auto& gameObject : scene->gameObjects) {
-				if (ImGui::Button(gameObject->name.c_str())) {}
+				if (ImGui::TreeNode(gameObject->name.c_str())) {
+					EventData data = { EventType::GameObjectSelected };
+					data.gameObjectIndex = gameObject.get()->id;
+					EventManager::getInstance().notifyObservers(data);
+				}
 			}
 		}
 		

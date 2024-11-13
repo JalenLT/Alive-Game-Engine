@@ -2,8 +2,14 @@
 #ifndef INSPECTORWINDOW_H
 #define INSPECTORWINDOW_H
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include "UIWindow.h"
 #include "Observer.h"
+#include "SceneManager.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 class InspectorWindow : public UIWindow, public Observer {
 public:
@@ -23,6 +29,43 @@ public:
 					ImGui::Text("No file path available.");
 				}
 
+			};
+		}
+		else if (data.type == EventType::GameObjectSelected) {
+			callback = [data]() mutable {
+				float rotation[3] = { 0.0f, 0.0f, 0.0f };
+
+				GameObject* gameObject = SceneManager::getInstance().currentScene->gameObjects[data.gameObjectIndex.value()].get();
+
+				ImGui::Text(("GameObject: " + gameObject->name).c_str());
+
+				ImGui::Text("Position: ");
+				ImGui::Columns(3);
+				ImGui::InputFloat("lX", &gameObject->modelMatrix[3][0], 0.1f);
+				ImGui::NextColumn();
+				ImGui::InputFloat("lY", &gameObject->modelMatrix[3][1], 0.1f);
+				ImGui::NextColumn();
+				ImGui::InputFloat("lZ", &gameObject->modelMatrix[3][2], 0.1f);
+				ImGui::NextColumn();
+				ImGui::Columns(1);
+
+				ImGui::Text("Rotation: ");
+				ImGui::Columns(3);
+				ImGui::InputFloat("rX", &rotation[0], 0.1f);
+				ImGui::NextColumn();
+				ImGui::InputFloat("rY", &rotation[1], 0.1f);
+				ImGui::NextColumn();
+				ImGui::InputFloat("rZ", &rotation[2], 0.1f);
+				ImGui::NextColumn();
+				ImGui::Columns(1);
+
+				// Create a quaternion representing a rotation (e.g., 45 degrees around the y-axis)
+				glm::quat rotationQuat = glm::angleAxis(glm::radians(45.0f), glm::vec3(rotation[0], rotation[1], rotation[2]));
+
+				// Convert the quaternion to a rotation matrix
+				glm::mat4 rotationMatrix = glm::toMat4(rotationQuat);
+
+				gameObject->modelMatrix = rotationMatrix * gameObject->modelMatrix;
 			};
 		}
 	}

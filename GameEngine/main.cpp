@@ -21,10 +21,10 @@ int main() {
 
         SceneManager::getInstance().initialize();
         renderer.initializeShader(renderer.vertexShaderSource, renderer.fragmentShaderSource);
-        SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\USER\\OneDrive\\Documents\\OneDrive\\Desktop\\cube-Jalen.obj", "Cube Original");
+        SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
 
-        if (std::filesystem::exists("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json")) {
-            SceneManager::getInstance().loadSceneFromFile("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json");
+        if (std::filesystem::exists("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json")) {
+            SceneManager::getInstance().loadSceneFromFile("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json");
 
             EventData data{ EventType::RefreshSceneHierarchy };
 
@@ -41,14 +41,14 @@ int main() {
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
                 glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                 std::cout << "Ctrl + S pressed, saving scene..." << std::endl;
-                saveToFile(*SceneManager::getInstance().currentScene, "C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
+                saveToFile(*SceneManager::getInstance().currentScene, "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
             }
 
             UserInterfaceManager::getInstance().newFrame();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            SceneManager::getInstance().currentScene->gameObjects[0].get()->modelMatrix = glm::rotate(SceneManager::getInstance().currentScene->gameObjects[0].get()->modelMatrix, deltaTime * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f));
+            //SceneManager::getInstance().currentScene->gameObjects[0].get()->modelMatrix = glm::rotate(SceneManager::getInstance().currentScene->gameObjects[0].get()->modelMatrix, deltaTime * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f));
 
             renderer.render(SceneManager::getInstance().currentScene->gameObjects);
 

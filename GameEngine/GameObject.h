@@ -21,6 +21,7 @@ public:
     // OpenGL handles - Do not serialize
     unsigned int VAO, VBO, EBO;
 
+    int id;
     std::string name;
     std::string path = "tmp";
     std::weak_ptr<GameObject> parent; // Changed from raw pointer to std::weak_ptr
@@ -29,12 +30,13 @@ public:
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     Material material;
 
-    GameObject() : VAO(0), VBO(0), EBO(0), name("Cube") {};
+    GameObject() : id(0), VAO(0), VBO(0), EBO(0), name("Cube") {};
     ~GameObject() = default;
 
     void update(const EventData& data) override {}
 
-    void initialize(const std::string& path, std::shared_ptr<GameObject> parent = nullptr) {
+    void initialize(const int id, const std::string& path, std::shared_ptr<GameObject> parent = nullptr) {
+        this->id = id;
         this->path = path;
         this->parent = parent;
 
@@ -110,6 +112,7 @@ public:
     template <class Archive>
     void serialize(Archive& ar) {
         ar(
+            CEREAL_NVP(id),
             CEREAL_NVP(name),
             CEREAL_NVP(path),
             CEREAL_NVP(modelMatrix),

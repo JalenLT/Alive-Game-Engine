@@ -22,7 +22,7 @@ public:
     void addGameObject(const std::string& path, const std::string& name) {
         auto gameObject = std::make_shared<GameObject>();
         gameObject->name = name;
-        gameObject->initialize(path);
+        gameObject->initialize(gameObjects.size(), path);
         gameObjects.push_back(std::move(gameObject));
     }
 
