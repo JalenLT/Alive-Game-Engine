@@ -11,13 +11,15 @@
 enum class EventType {
 	FileSelected,
 	RefreshSceneHierarchy,
-	GameObjectSelected
+	GameObjectSelected,
+	LightSelected
 };
 
 struct EventData {
 	EventType type;
 	std::optional<std::filesystem::path> filePath;
 	std::optional<int> gameObjectIndex;
+	std::optional<int> lightIndex;
 
 	EventData(EventType eventType) : type(eventType) {};
 };

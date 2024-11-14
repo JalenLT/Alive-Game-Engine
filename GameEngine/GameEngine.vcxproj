@@ -140,6 +140,7 @@
     <ClInclude Include="glm_serialization.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="InspectorWindow.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Renderer.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="serialization_utils.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="UIWindow.h" />
     <ClInclude Include="UserInterfaceManager.h" />
     <ClInclude Include="Window.h" />

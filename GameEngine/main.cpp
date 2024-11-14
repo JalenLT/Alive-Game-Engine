@@ -22,6 +22,7 @@ int main() {
         SceneManager::getInstance().initialize();
         renderer.initializeShader(renderer.vertexShaderSource, renderer.fragmentShaderSource);
         SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
+        SceneManager::getInstance().currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
 
         if (std::filesystem::exists("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json")) {
             SceneManager::getInstance().loadSceneFromFile("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json");
@@ -48,9 +49,7 @@ int main() {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            //SceneManager::getInstance().currentScene->gameObjects[0].get()->modelMatrix = glm::rotate(SceneManager::getInstance().currentScene->gameObjects[0].get()->modelMatrix, deltaTime * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f));
-
-            renderer.render(SceneManager::getInstance().currentScene->gameObjects);
+            renderer.render(SceneManager::getInstance().currentScene->gameObjects, SceneManager::getInstance().currentScene->lights);
 
             UserInterfaceManager::getInstance().render();
 

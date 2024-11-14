@@ -12,6 +12,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #include "GameObject.h"
+#include "Light.h"
 
 class Renderer {
 public:
@@ -175,20 +176,20 @@ public:
 
 	void setProjection(glm::mat4 projection) { this->projection = projection; }
 
-	void passMatricesToShader(GameObject& gameObject) {
+	void passMatricesToShader(GameObject& gameObject, Light& light) {
 		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
 		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 		unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(gameObject.modelMatrix));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(gameObject.transform.getMatrix()));
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(getView()));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(getProjection()));
 
 		// Position the light at the top-right
-		glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), 2.0f, 2.0f, -2.0f);
+		glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), light.transform.position[0], light.transform.position.y, light.transform.position.z);
 		// Set light colors to a cool blue
-		glUniform3f(glGetUniformLocation(shaderProgram, "lightAmbient"), 0.1f, 0.1f, 0.3f);
-		glUniform3f(glGetUniformLocation(shaderProgram, "lightDiffuse"), 0.2f, 0.2f, 0.7f);
-		glUniform3f(glGetUniformLocation(shaderProgram, "lightSpecular"), 0.5f, 0.5f, 1.0f);
+		glUniform3f(glGetUniformLocation(shaderProgram, "lightAmbient"), light.material.ambient[0], light.material.ambient[1], light.material.ambient[2]);
+		glUniform3f(glGetUniformLocation(shaderProgram, "lightDiffuse"), light.material.diffuse[0], light.material.diffuse[1], light.material.diffuse[2]);
+		glUniform3f(glGetUniformLocation(shaderProgram, "lightSpecular"), light.material.specular[0], light.material.specular[1], light.material.specular[2]);
 
 		// Optionally, set material to a neutral or contrasting color
 		glUniform3f(glGetUniformLocation(shaderProgram, "materialAmbient"), gameObject.material.ambient.x, gameObject.material.ambient.y, gameObject.material.ambient.z);
@@ -205,11 +206,11 @@ public:
 		glBindVertexArray(0);
 	}
 
-	void render(std::vector<std::shared_ptr<GameObject>>& gameObjects) {
+	void render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std::vector<std::shared_ptr<Light>>& lights) {
 		glUseProgram(shaderProgram);
 
 		for (auto& gameObject : gameObjects) {
-			passMatricesToShader(*gameObject);  // Dereference the unique_ptr to pass a reference to GameObject
+			passMatricesToShader(*gameObject, *lights[0]);  // Dereference the unique_ptr to pass a reference to GameObject
 			renderModel(*gameObject);           // Dereference the unique_ptr to pass a reference to GameObject
 		}
 	}

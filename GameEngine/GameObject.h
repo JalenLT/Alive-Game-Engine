@@ -15,6 +15,7 @@
 #include "glm_serialization.h"
 #include <memory>
 #include <filesystem>
+#include "Transform.h"
 
 class GameObject : public Observer {
 public:
@@ -27,7 +28,7 @@ public:
     std::weak_ptr<GameObject> parent; // Changed from raw pointer to std::weak_ptr
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    Transform transform;
     Material material;
 
     GameObject() : id(0), VAO(0), VBO(0), EBO(0), name("Cube") {};
@@ -115,9 +116,8 @@ public:
             CEREAL_NVP(id),
             CEREAL_NVP(name),
             CEREAL_NVP(path),
-            CEREAL_NVP(modelMatrix),
+            CEREAL_NVP(transform),
             CEREAL_NVP(material)
-            // parent not serialized, would require handling circular references
         );
     }
 };

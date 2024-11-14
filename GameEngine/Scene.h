@@ -6,6 +6,7 @@
 #include <memory> // For std::unique_ptr and smart pointers
 #include "serialization_utils.h"
 #include "GameObject.h"
+#include "Light.h"
 #include <cereal/types/vector.hpp>
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/memory.hpp>
@@ -17,6 +18,7 @@ public:
     ~Scene() = default;
 
     std::vector<std::shared_ptr<GameObject>> gameObjects;
+    std::vector<std::shared_ptr<Light>> lights;
     std::string name;
 
     void addGameObject(const std::string& path, const std::string& name) {
@@ -24,6 +26,14 @@ public:
         gameObject->name = name;
         gameObject->initialize(gameObjects.size(), path);
         gameObjects.push_back(std::move(gameObject));
+    }
+
+    void addLight(const std::string& type, glm::vec3 position) {
+        auto light = std::make_shared<Light>();
+        light->id = lights.size();
+        light->type = type;
+        light->transform.position = position;
+        lights.push_back(std::move(light));
     }
 
     template <class Archive>
@@ -38,7 +48,16 @@ public:
             }
         }
 
+        // Flatten lights to plain vector of Light
+        std::vector<Light> lights;
+        for (const auto& light : this->lights) {
+            if (light) {
+                lights.push_back(*light); // Dereference shared_ptr to get plain Light
+            }
+        }
+
         ar(CEREAL_NVP(gameObjects));
+        ar(CEREAL_NVP(lights));
     }
 
     template <class Archive>
@@ -48,13 +67,20 @@ public:
         // Load into a plain vector of GameObject
         std::vector<GameObject> gameObjects;
         ar(CEREAL_NVP(gameObjects));
-        std::cout << gameObjects[0].path << std::endl;
+
+        // Load into a plain vector of Light
+        std::vector<Light> lights;
+        ar(CEREAL_NVP(lights));
 
         // Reconstruct the shared pointers from the plain objects
         this->gameObjects.clear();
+        this->lights.clear();
         for (const auto& obj : gameObjects) {
             addGameObject(obj.path, obj.name);
-            this->gameObjects.back()->modelMatrix = obj.modelMatrix;
+            this->gameObjects.back()->transform = obj.transform;
+        }
+        for (const auto& obj : lights) {
+            addLight(obj.type, obj.transform.position);
         }
     }
 };

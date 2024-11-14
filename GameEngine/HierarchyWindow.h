@@ -31,6 +31,13 @@ public:
 		ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
 		if (scene != nullptr) {
+			for (auto& light : scene->lights) {
+				if (ImGui::TreeNode((light->type + std::to_string(light->id)).c_str())) {
+					EventData data = { EventType::LightSelected };
+					data.lightIndex = light->id;
+					EventManager::getInstance().notifyObservers(data);
+				}
+			}
 			for (auto& gameObject : scene->gameObjects) {
 				if (ImGui::TreeNode(gameObject->name.c_str())) {
 					EventData data = { EventType::GameObjectSelected };

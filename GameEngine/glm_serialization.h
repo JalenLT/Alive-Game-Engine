@@ -3,6 +3,8 @@
 #define GLM_SERIALIZATION_H
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/common.hpp>
 
@@ -48,6 +50,16 @@ namespace cereal {
         );
     }
 
+    // Serialization function for glm::quat
+    template <class Archive>
+    void serialize(Archive& ar, glm::quat& q) {
+        ar(
+            CEREAL_NVP(q.w),
+            CEREAL_NVP(q.x),
+            CEREAL_NVP(q.y),
+            CEREAL_NVP(q.z)
+        );
+    }
 }
 
 #endif
