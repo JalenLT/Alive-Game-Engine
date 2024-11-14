@@ -49,6 +49,9 @@ int main() {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            SceneManager::getInstance().currentScene->gameObjects[0]->transform.rotateAroundAxisAngle(glm::vec3(0.0f, 0.0f, 1.0f), 0.1f);
+            SceneManager::getInstance().currentScene->gameObjects[0]->transform.rotateAroundAxisAngle(glm::vec3(0.0f, 1.0f, 0.0f), 0.1f);
+
             renderer.render(SceneManager::getInstance().currentScene->gameObjects, SceneManager::getInstance().currentScene->lights);
 
             UserInterfaceManager::getInstance().render();

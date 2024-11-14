@@ -78,6 +78,7 @@ public:
         for (const auto& obj : gameObjects) {
             addGameObject(obj.path, obj.name);
             this->gameObjects.back()->transform = obj.transform;
+            this->gameObjects.back()->material = obj.material;
         }
         for (const auto& obj : lights) {
             addLight(obj.type, obj.transform.position);
