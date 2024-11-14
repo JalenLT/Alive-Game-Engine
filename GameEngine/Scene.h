@@ -81,6 +81,7 @@ public:
         }
         for (const auto& obj : lights) {
             addLight(obj.type, obj.transform.position);
+            this->lights.back()->material = obj.material;
         }
     }
 };
