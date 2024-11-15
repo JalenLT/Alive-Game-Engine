@@ -30,22 +30,34 @@ public:
 		ImGui::SetNextWindowSize(ImVec2(width, height));
 		ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
-		if (scene != nullptr) {
-			for (auto& light : scene->lights) {
-				if (ImGui::TreeNode((light->type + std::to_string(light->id)).c_str())) {
-					EventData data = { EventType::LightSelected };
-					data.lightIndex = light->id;
-					EventManager::getInstance().notifyObservers(data);
-				}
-			}
-			for (auto& gameObject : scene->gameObjects) {
-				if (ImGui::TreeNode(gameObject->name.c_str())) {
-					EventData data = { EventType::GameObjectSelected };
-					data.gameObjectIndex = gameObject.get()->id;
-					EventManager::getInstance().notifyObservers(data);
-				}
-			}
-		}
+        if (scene != nullptr) {
+            for (auto& light : scene->lights) {
+                bool isOpen = ImGui::TreeNode((light->type + std::to_string(light->id)).c_str());
+
+                if (ImGui::IsItemClicked()) { // Check if clicked and not just toggled
+                    EventData data = { EventType::LightSelected };
+                    data.lightIndex = light->id;
+                    EventManager::getInstance().notifyObservers(data);
+                }
+
+                if (isOpen) {
+                    ImGui::TreePop(); // Close the TreeNode here
+                }
+            }
+            for (auto& gameObject : scene->gameObjects) {
+                bool isOpen = ImGui::TreeNode(gameObject->name.c_str());
+
+                if (ImGui::IsItemClicked()) { // Check if clicked and not just toggled
+                    EventData data = { EventType::GameObjectSelected };
+                    data.gameObjectIndex = gameObject.get()->id;
+                    EventManager::getInstance().notifyObservers(data);
+                }
+
+                if (isOpen) {
+                    ImGui::TreePop(); // Close the TreeNode here
+                }
+            }
+        }
 		
 		ImGui::End();
 

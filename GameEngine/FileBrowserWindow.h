@@ -125,8 +125,8 @@ public:
 	}
 
 private:
-	std::string basePath = "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive";
-	std::string currentPath = "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive";
+	std::string basePath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
+	std::string currentPath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
 	/*std::string basePath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";
 	std::string currentPath = "C:\\Users\\USER\\AppData\\Roaming\\Alive";*/
 };
