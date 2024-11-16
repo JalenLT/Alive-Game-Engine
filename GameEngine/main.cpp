@@ -9,7 +9,7 @@
 
 int main() {
     try {
-        double targetFrameRate = 60.0;
+        double targetFrameRate = 120.0;
         double frameDuration = 1.0 / targetFrameRate;
 
         Window::getInstance().initialize(1000, 800, "Alive");
@@ -35,6 +35,7 @@ int main() {
 
         while (!glfwWindowShouldClose(window)) {
             auto frameStartTime = std::chrono::steady_clock::now();
+            Window::getInstance().updateMousePosition();
 
             glfwPollEvents();
 

@@ -96,11 +96,8 @@ public:
 		int windowWidth, windowHeight;
 		glfwGetWindowSize(Window::getInstance().getWindow(), &windowWidth, &windowHeight);
 
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.086f, 0.098f, 0.145f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.056f, 0.038f, 0.015f, 1.0f));
+		setupRender();
 
-		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(width, height));
 		ImGui::Begin("File Browser", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 		addFolder("...", "Back", true);
 		ImGui::SameLine();
@@ -119,9 +116,7 @@ public:
 			}
 		}
 		
-		ImGui::End();
-
-		ImGui::PopStyleColor(2);
+		teardownRender();
 	}
 
 private:

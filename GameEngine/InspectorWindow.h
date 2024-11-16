@@ -123,11 +123,8 @@ public:
 		int windowWidth, windowHeight;
 		glfwGetWindowSize(Window::getInstance().getWindow(), &windowWidth, &windowHeight);
 
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+		setupRender();
 
-		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(width, height));
 		ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
 		if (callback != nullptr) {
@@ -137,9 +134,7 @@ public:
 			ImGui::Text("...");
 		}
 
-		ImGui::End();
-
-		ImGui::PopStyleColor(2);
+		teardownRender();
 	}
 
 private:

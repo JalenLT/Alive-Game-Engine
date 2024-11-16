@@ -1,5 +1,4 @@
 #include "Window.h"
-#include <iostream>
 
 Window& Window::getInstance() {
 	static Window instance;
@@ -30,6 +29,9 @@ void Window::initialize(int width, int height, const char* title) {
 		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
 		glEnable(GL_DEPTH_TEST);
+
+		glfwSetKeyCallback(Window::getInstance().getWindow(), Window::getInstance().keyCallback);
+		glfwSetMouseButtonCallback(Window::getInstance().getWindow(), Window::getInstance().mouseButtonCallback);
 	}
 }
 
@@ -88,6 +90,32 @@ int Window::getWindowHeight() {
 	int width, height;
 	glfwGetWindowSize(Window::getInstance().getWindow(), &width, &height);
 	return height;
+}
+
+void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (action == GLFW_PRESS) {
+		std::cout << "Key pressed: " << key << std::endl;
+		if (key == GLFW_KEY_ESCAPE) {
+			glfwSetWindowShouldClose(window, true); // Close the window if ESC is pressed
+		}
+	}
+	else if (action == GLFW_RELEASE) {
+		std::cout << "Key released: " << key << std::endl;
+	}
+}
+
+void Window::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		std::cout << "Left mouse button pressed" << std::endl;
+		std::cout << Window::getInstance().mouseX << ", " << Window::getInstance().mouseY << std::endl;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+		std::cout << "Left mouse button released" << std::endl;
+	}
+}
+
+void Window::updateMousePosition() {
+	glfwGetCursorPos(window, &Window::getInstance().mouseX, &Window::getInstance().mouseY);
 }
 
 Window::Window() {}
