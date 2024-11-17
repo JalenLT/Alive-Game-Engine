@@ -5,7 +5,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <glm/glm.hpp>
 #include "EventManager.h"
+#include "Raycast.h"
+#include "Renderer.h"
 
 class Window {
 public:

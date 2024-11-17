@@ -13,6 +13,7 @@
 #include "assimp/postprocess.h"
 #include "GameObject.h"
 #include "Light.h"
+#include "UserInterfaceManager.h"
 
 class Renderer {
 public:
@@ -81,74 +82,6 @@ public:
 		static Renderer instance;
 		return instance;
 	}
-
-	//void loadModel(const std::string& path) {
-	//	auto gameObject = std::make_unique<GameObject>();
-	//	Assimp::Importer importer;
-	//	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-	//	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-	//		std::cout << "Error from ASSIMP: " << importer.GetErrorString() << std::endl;
-	//		return;
-	//	}
-
-	//	processNode(scene->mRootNode, scene, gameObject.get());
-	//	gameObjects.push_back(std::move(gameObject));
-	//}
-
-	//void processNode(aiNode* node, const aiScene* scene, GameObject* gameObject) {
-	//	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-	//		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-	//		processMesh(mesh, scene, gameObject);
-	//	}
-
-	//	for (unsigned int i = 0; i < node->mNumChildren; i++) {
-	//		processNode(node->mChildren[i], scene, gameObject);
-	//	}
-	//}
-
-	//void processMesh(aiMesh* mesh, const aiScene* scene, GameObject* gameObject) {
-	//	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-	//		gameObject->vertices.push_back(mesh->mVertices[i].x);
-	//		gameObject->vertices.push_back(mesh->mVertices[i].y);
-	//		gameObject->vertices.push_back(mesh->mVertices[i].z);
-
-	//		if (mesh->mNormals) {
-	//			gameObject->vertices.push_back(mesh->mNormals[i].x);
-	//			gameObject->vertices.push_back(mesh->mNormals[i].y);
-	//			gameObject->vertices.push_back(mesh->mNormals[i].z);
-	//		}
-	//	}
-
-	//	for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
-	//		aiFace face = mesh->mFaces[i];
-	//		for (unsigned int j = 0; j < face.mNumIndices; j++) {
-	//			gameObject->indices.push_back(face.mIndices[j]);
-	//		}
-	//	}
-
-	//	// Setup OpenGL buffers
-	//	glGenVertexArrays(1, &gameObject->VAO);
-	//	glGenBuffers(1, &gameObject->VBO);
-	//	glGenBuffers(1, &gameObject->EBO);
-
-	//	glBindVertexArray(gameObject->VAO);
-
-	//	glBindBuffer(GL_ARRAY_BUFFER, gameObject->VBO);
-	//	glBufferData(GL_ARRAY_BUFFER, gameObject->vertices.size() * sizeof(float), &gameObject->vertices[0], GL_STATIC_DRAW);
-
-	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gameObject->EBO);
-	//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, gameObject->indices.size() * sizeof(unsigned int), &gameObject->indices[0], GL_STATIC_DRAW);
-
-	//	// Position attribute
-	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	//	glEnableVertexAttribArray(0);
-
-	//	// Normal attribute
-	//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	//	glEnableVertexAttribArray(1);
-
-	//	glBindVertexArray(0);
-	//}
 
 	void initializeShader(const char* vertexShaderSource, const char* fragmentShaderSource) {
 		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);

@@ -17,7 +17,7 @@ int main() {
         EventManager& eventManager = EventManager::getInstance();
         GLFWwindow* window = Window::getInstance().getWindow();
         UserInterfaceManager::getInstance().initialize(window);
-        UserInterfaceManager::getInstance().editorLayout();
+        //UserInterfaceManager::getInstance().editorLayout();
         Renderer& renderer = Renderer::getInstance();
 
         SceneManager::getInstance().initialize();

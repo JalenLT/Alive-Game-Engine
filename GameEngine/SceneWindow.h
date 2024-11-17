@@ -9,7 +9,11 @@ class SceneWindow : public UIWindow, public Observer {
 public:
 	SceneWindow(float x = 0.0f, float y = 0.0f, float width = 300.0f, float height = 400.0f) : UIWindow(x, y, width, height) {}
 
-	void update(const EventData& data) override {}
+	void update(const EventData& data) override {
+		if (data.type == EventType::MouseClicked) {
+			std::cout << data.mousePosition.value()[0] << ", " << data.mousePosition.value()[1] << std::endl;
+		}
+	}
 
 	void render() override {
 		int windowWidth, windowHeight;
