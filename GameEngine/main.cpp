@@ -19,15 +19,16 @@ int main() {
         GLFWwindow* window = Window::getInstance().getWindow();
         UserInterfaceManager::getInstance().initialize(window);
         //UserInterfaceManager::getInstance().editorLayout();
+        UserInterfaceManager::getInstance().playbackLayout();
         Renderer& renderer = Renderer::getInstance();
 
         SceneManager::getInstance().initialize();
         renderer.initializeShader(renderer.vertexShaderSource, renderer.fragmentShaderSource);
-        SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\USER\\OneDrive\\Documents\\OneDrive\\Desktop\\cube-Jalen.obj", "Cube Original");
+        SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
         SceneManager::getInstance().currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
 
-        if (std::filesystem::exists("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json")) {
-            SceneManager::getInstance().loadSceneFromFile("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json");
+        if (std::filesystem::exists("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json")) {
+            SceneManager::getInstance().loadSceneFromFile("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json");
 
             EventData data{ EventType::RefreshSceneHierarchy };
 
@@ -43,7 +44,7 @@ int main() {
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
                 glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                 std::cout << "Ctrl + S pressed, saving scene..." << std::endl;
-                saveToFile(*SceneManager::getInstance().currentScene, "C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
+                saveToFile(*SceneManager::getInstance().currentScene, "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
             }
 
             UserInterfaceManager::getInstance().newFrame();

@@ -67,3 +67,13 @@ void UserInterfaceManager::editorLayout() {
 	EventManager::getInstance().addObserver(&inspectorWindow);
 	EventManager::getInstance().addObserver(&hierarchyWindow);
 }
+
+void UserInterfaceManager::playbackLayout() {
+	sceneWindow.x = 0.0f;
+	sceneWindow.y = 0.0f;
+	sceneWindow.width = Window::getInstance().getWindowWidth();
+	sceneWindow.height = Window::getInstance().getWindowHeight();
+	addWindow(&sceneWindow);
+
+	EventManager::getInstance().addObserver(&sceneWindow);
+}

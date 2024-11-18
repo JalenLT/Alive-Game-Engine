@@ -112,19 +112,8 @@ void Window::mouseButtonCallback(GLFWwindow* window, int button, int action, int
 		data.mousePosition = { Window::getInstance().mouseX, Window::getInstance().mouseY };
 
 		EventManager::getInstance().notifyObservers(data);
-
-		/*Raycast raycast{ Window::getInstance().mouseX, Window::getInstance().mouseY, Window::getInstance().getWindowWidth(), Window::getInstance().getWindowHeight(), Renderer::getInstance().getProjection(), Renderer::getInstance().getView() };
-
-		glm::vec3 min = glm::vec3(-0.5f, -0.5f, -0.5f);
-		glm::vec3 max = glm::vec3(0.5f, 0.5f, 0.5f);
-
-		if (raycast.rayIntersectAABB(min, max)) {
-			std::cout << "Ray has hit successfully" << std::endl;
-		}*/
 	}
-	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-		std::cout << "Left mouse button released" << std::endl;
-	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {}
 }
 
 void Window::updateMousePosition() {

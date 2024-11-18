@@ -36,6 +36,8 @@ public:
 
 	void editorLayout();
 
+	void playbackLayout();
+
 private:
 	UserInterfaceManager();
 	UserInterfaceManager(const UserInterfaceManager&) = delete;
