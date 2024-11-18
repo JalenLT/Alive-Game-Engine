@@ -5,42 +5,22 @@
 #include "Subject.h"
 #include <vector>
 #include <algorithm>
-#include <iostream>
-#include <string>
 
 class EventManager : public Subject {
 private:
 	std::vector<Observer*> observers;
 
-	EventManager() {}
+	EventManager();
 	EventManager(const EventManager&) = delete;
 	EventManager& operator=(const EventManager&) = delete;
-	~EventManager() {}
+	~EventManager();
 
 public:
-	static EventManager& getInstance() {
-		static EventManager instance;
-		return instance;
-	}
-
-	void addObserver(Observer* observer) override {
-		observers.push_back(observer);
-	}
-
-	void removeObserver(Observer* observer) override {
-		observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
-	}
-
-	void notifyObservers(const EventData& data) override {
-		for (auto* observer : observers) {
-			observer->update(data);
-		}
-	}
-
-	void triggerEvent(const EventData& data) {
-		//std::cout << "Event triggered" << event << std::endl;
-		notifyObservers(data);
-	}
+	static EventManager& getInstance();
+	void addObserver(Observer* observer) override;
+	void removeObserver(Observer* observer) override;
+	void notifyObservers(const EventData& data) override;
+	void triggerEvent(const EventData& data);
 };
 
 #endif

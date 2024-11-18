@@ -1,4 +1,5 @@
 #pragma once
+#define GLM_ENABLE_EXPERIMENTAL
 #ifndef WINDOW_CPP
 #define WINDOW_CPP
 
@@ -8,7 +9,6 @@
 #include <glm/glm.hpp>
 #include "EventManager.h"
 #include "Raycast.h"
-#include "Renderer.h"
 
 class Window {
 public:

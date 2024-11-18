@@ -1,4 +1,5 @@
 #pragma once
+#define GLM_ENABLE_EXPERIMENTAL
 #ifndef GLM_SERIALIZATION_H
 #define GLM_SERIALIZATION_H
 

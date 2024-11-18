@@ -24,7 +24,7 @@ struct EventData {
 	std::optional<int> lightIndex;
 	std::optional<std::vector<double>> mousePosition;
 
-	EventData(EventType eventType) : type(eventType) {};
+	EventData(EventType eventType);
 };
 
 #endif

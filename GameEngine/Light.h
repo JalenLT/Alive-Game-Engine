@@ -9,17 +9,19 @@
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/json.hpp>
+#include <string>
+#include <glm/glm.hpp>
 
 class Light {
 public:
-	Light() {}
+	Light();
 	~Light() = default;
 
-	int id{ 0 };
-	std::string type{ "Point" };
+	int id;
+	std::string type;
 	Transform transform;
 	Material material;
-	glm::vec3 attenuation{ 1.0f, 0.09f, 0.032f };
+	glm::vec3 attenuation;
 
 	template <class Archive>
 	void serialize(Archive& ar) {

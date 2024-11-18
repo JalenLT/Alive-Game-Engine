@@ -4,31 +4,25 @@
 
 #include "Scene.h"
 #include <memory>
+#include <string>
 #include "serialization_utils.h"
 
 class SceneManager {
 public:
 	std::shared_ptr<Scene> currentScene;
 
-	static SceneManager& getInstance() {
-		static SceneManager instance;
-		return instance;
-	}
+	static SceneManager& getInstance();
 
-	void initialize() {
-		currentScene = std::make_shared<Scene>();
-	}
+	void initialize();
 
-	void loadSceneFromFile(const std::string& filename) {
-		currentScene = std::make_shared<Scene>(loadFromFile<Scene>(filename, "Scene"));
-	}
+	void loadSceneFromFile(const std::string& filename);
 
 private:
-	SceneManager() : currentScene(nullptr) {}
+	SceneManager();
 	SceneManager(const SceneManager&) = delete;
 	SceneManager& operator=(const SceneManager&) = delete;
-	~SceneManager() {}
-	void setCurrentScene(std::shared_ptr<Scene> scene) { currentScene = scene; }
+	~SceneManager();
+	void setCurrentScene(std::shared_ptr<Scene> scene);
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "Renderer.h"
 
 Window& Window::getInstance() {
 	static Window instance;
@@ -14,6 +15,7 @@ void Window::initialize(int width, int height, const char* title) {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 		glfwSwapInterval(1);
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
 		monitor = glfwGetPrimaryMonitor();
 

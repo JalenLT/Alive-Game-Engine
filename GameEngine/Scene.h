@@ -3,38 +3,28 @@
 #define SCENE_H
 
 #include <vector>
-#include <memory> // For std::unique_ptr and smart pointers
-#include "serialization_utils.h"
-#include "GameObject.h"
-#include "Light.h"
+#include <memory>
+#include <string>
 #include <cereal/types/vector.hpp>
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/json.hpp>
+#include "GameObject.h"
+#include "Light.h"
+#include "serialization_utils.h"
 
 class Scene {
 public:
-    Scene() = default;
-    ~Scene() = default;
+    Scene();
+    ~Scene();
 
     std::vector<std::shared_ptr<GameObject>> gameObjects;
     std::vector<std::shared_ptr<Light>> lights;
     std::string name;
 
-    void addGameObject(const std::string& path, const std::string& name) {
-        auto gameObject = std::make_shared<GameObject>();
-        gameObject->name = name;
-        gameObject->initialize(gameObjects.size(), path);
-        gameObjects.push_back(std::move(gameObject));
-    }
+    void addGameObject(const std::string& path, const std::string& name);
 
-    void addLight(const std::string& type, glm::vec3 position) {
-        auto light = std::make_shared<Light>();
-        light->id = lights.size();
-        light->type = type;
-        light->transform.position = position;
-        lights.push_back(std::move(light));
-    }
+    void addLight(const std::string& type, glm::vec3 position);
 
     template <class Archive>
     void save(Archive& ar) const {
