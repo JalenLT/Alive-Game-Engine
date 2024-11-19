@@ -7,6 +7,7 @@ FileBrowserWindow::FileBrowserWindow(float x, float y, float width, float height
 	createFolder(basePath + "\\GameObjects");
 	createFolder(basePath + "\\Materials");
 	createFolder(basePath + "\\Models");
+	createFolder(basePath + "\\Shaders");
 };
 
 fs::directory_iterator FileBrowserWindow::getDirectoryIterator(const fs::path& directory) {

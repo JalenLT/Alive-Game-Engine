@@ -23,7 +23,6 @@ int main() {
         Renderer& renderer = Renderer::getInstance();
 
         SceneManager::getInstance().initialize();
-        renderer.initializeShader(renderer.vertexShaderSource, renderer.fragmentShaderSource);
         SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
         SceneManager::getInstance().currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
 

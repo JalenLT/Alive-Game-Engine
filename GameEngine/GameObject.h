@@ -8,6 +8,7 @@
 #include "Event.h"
 #include "Transform.h"
 #include "assimp/scene.h"
+#include "Mesh.h"
 #include <cereal/types/vector.hpp>
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/memory.hpp>
@@ -20,16 +21,13 @@
 
 class GameObject : public Observer {
 public:
-    unsigned int VAO, VBO, EBO;
-
     int id;
     std::string name;
     std::string path;
     std::weak_ptr<GameObject> parent; // Changed from raw pointer to std::weak_ptr
-    std::vector<float> vertices;
-    std::vector<unsigned int> indices;
     Transform transform;
     Material material;
+    Mesh mesh;
 
     GameObject();
     ~GameObject();
