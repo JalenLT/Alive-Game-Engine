@@ -18,6 +18,9 @@ class Renderer {
 public:
 	std::vector<std::unique_ptr<GameObject>> gameObjects;
 
+	GLuint defaultShader{ 0 };
+	GLuint lineShader{ 0 };
+
 	static Renderer& getInstance();
 
 	glm::mat4 getView();
@@ -34,7 +37,7 @@ public:
 
 	void render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std::vector<std::shared_ptr<Light>>& lights);
 
-	void renderLines(const Mesh& mesh);
+	void renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection);
 
 	std::string readShaderSource(const char* shaderPath);
 

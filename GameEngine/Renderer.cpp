@@ -55,53 +55,37 @@ void Renderer::renderModel(unsigned int VAO, std::vector<unsigned int> indices) 
 }
 
 void Renderer::render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std::vector<std::shared_ptr<Light>>& lights) {
-	// Create and use the shader program for the Phong-shaded cube
-	GLuint shaderProgram = createShaderProgram(
-		"C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\defaultVertexShader.glsl",
-		"C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\defaultFragmentShader.glsl"
-	);
-
-	glUseProgram(shaderProgram);
+	glUseProgram(defaultShader);
 
 	// First pass: Render the Phong-shaded cube
 	for (auto& gameObject : gameObjects) {
-		passMatricesToShader(shaderProgram, *gameObject, *lights[0]);
+		passMatricesToShader(defaultShader, *gameObject, *lights[0]);
 		renderModel(gameObject->mesh.VAO, gameObject->mesh.indices);
 	}
 
-	// Switch to the line shader program for the second pass
-	GLuint lineShaderProgram = createShaderProgram(
-		"C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\lineVertexShader.glsl",
-		"C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\lineFragmentShader.glsl"
-	);
+	// Optionally, reset to no shader after rendering
+	glUseProgram(0);
+}
 
-	glUseProgram(lineShaderProgram);
+void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
+	glUseProgram(lineShader);
 
 	glDisable(GL_DEPTH_TEST);
 
 	// Pass the same view and projection matrices to the line shader
-	GLint modelLoc = glGetUniformLocation(lineShaderProgram, "model");
-	GLint viewLoc = glGetUniformLocation(lineShaderProgram, "view");
-	GLint projectionLoc = glGetUniformLocation(lineShaderProgram, "projection");
+	GLint modelLoc = glGetUniformLocation(lineShader, "model");
+	GLint viewLoc = glGetUniformLocation(lineShader, "view");
+	GLint projectionLoc = glGetUniformLocation(lineShader, "projection");
 
-	glm::mat4 identityModel = glm::mat4(1.0f); // Use identity matrix if the line is in world space
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(identityModel));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(getView()));
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(getProjection()));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 	// Set the line color
-	GLint colorLocation = glGetUniformLocation(lineShaderProgram, "lineColor");
+	GLint colorLocation = glGetUniformLocation(lineShader, "lineColor");
 	glUniform3f(colorLocation, 0.0f, 1.0f, 0.0f); // Set line color to green
 
-	// Initialize and draw the line
-	Mesh lineMesh{};
-	lineMesh.vertices = {
-		-2.0f, -2.0f, 0.0f,  // Vertex 1
-		 2.0f,  2.0f, 0.0f   // Vertex 2
-	};
-	lineMesh.initializeBuffers(lineMesh.vertices);
-
-	glBindVertexArray(lineMesh.VAO);
+	glBindVertexArray(mesh.VAO);
 	glDrawArrays(GL_LINES, 0, 2); // Draw the line with 2 vertices
 	glBindVertexArray(0);
 
@@ -109,13 +93,6 @@ void Renderer::render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std
 
 	// Optionally, reset to no shader after rendering
 	glUseProgram(0);
-}
-
-void Renderer::renderLines(const Mesh& mesh) {
-	glBindVertexArray(mesh.VAO);
-	glLineWidth(2.0f); // Adjust line width as necessary
-	glDrawElements(GL_LINES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 }
 
 std::string Renderer::readShaderSource(const char* shaderPath) {

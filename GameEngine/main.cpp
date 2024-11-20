@@ -21,13 +21,31 @@ int main() {
         //UserInterfaceManager::getInstance().editorLayout();
         UserInterfaceManager::getInstance().playbackLayout();
         Renderer& renderer = Renderer::getInstance();
+        SceneManager& sceneManager = SceneManager::getInstance();
 
-        SceneManager::getInstance().initialize();
-        SceneManager::getInstance().currentScene->addGameObject("C:\\Users\\USER\\OneDrive\\Documents\\OneDrive\\Desktop\\cube-Jalen.obj", "Cube Original");
-        SceneManager::getInstance().currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
+        renderer.defaultShader = renderer.createShaderProgram(
+            "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\defaultVertexShader.glsl",
+            "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\defaultFragmentShader.glsl"
+        );
 
-        if (std::filesystem::exists("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json")) {
-            SceneManager::getInstance().loadSceneFromFile("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json");
+        renderer.lineShader = renderer.createShaderProgram(
+            "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\lineVertexShader.glsl",
+            "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\lineFragmentShader.glsl"
+        );
+
+        Mesh lineMesh{};
+        lineMesh.vertices = {
+            -2.0f, -2.0f, 0.0f,  // Vertex 1
+             2.0f,  2.0f, 0.0f   // Vertex 2
+        };
+        lineMesh.initializeBuffers(lineMesh.vertices);
+
+        sceneManager.initialize();
+        sceneManager.currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
+        sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
+
+        if (std::filesystem::exists("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json")) {
+            sceneManager.loadSceneFromFile("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json");
 
             EventData data{ EventType::RefreshSceneHierarchy };
 
@@ -43,7 +61,7 @@ int main() {
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
                 glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                 std::cout << "Ctrl + S pressed, saving scene..." << std::endl;
-                saveToFile(*SceneManager::getInstance().currentScene, "C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
+                saveToFile(*sceneManager.currentScene, "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
             }
 
             UserInterfaceManager::getInstance().newFrame();
@@ -53,6 +71,7 @@ int main() {
             SceneManager::getInstance().currentScene->gameObjects[0]->transform.rotateAroundAxisAngle(glm::normalize(glm::vec3(0.0f, 1.0f, 1.0f)), 0.1f);
 
             renderer.render(SceneManager::getInstance().currentScene->gameObjects, SceneManager::getInstance().currentScene->lights);
+            renderer.renderMesh(lineMesh, sceneManager.currentScene->gameObjects[0]->transform.getMatrix(), renderer.getView(), renderer.getProjection());
 
             UserInterfaceManager::getInstance().render();
 
