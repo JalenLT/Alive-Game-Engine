@@ -14,6 +14,12 @@ void Scene::addGameObject(const std::string& path, const std::string& name) {
     gameObjects.push_back(std::move(gameObject));
 }
 
+void Scene::addGameObject(const GameObject& gameObject) {
+    gameObjects.push_back(std::make_shared<GameObject>(gameObject));
+    gameObjects.back()->mesh.initializeBuffers(gameObjects.back()->mesh.vertices, gameObjects.back()->mesh.indices);
+    gameObjects.back()->boundingBox.computeBoundingBox(gameObjects.back()->transform, gameObjects.back()->mesh.vertices);
+}
+
 void Scene::addLight(const std::string& type, glm::vec3 position) {
     auto light = std::make_shared<Light>();
     light->id = lights.size();

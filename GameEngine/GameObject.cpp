@@ -14,6 +14,22 @@ void GameObject::initialize(const int id, const std::string& path, std::shared_p
     this->parent = parent;
 
     loadModel(path);
+
+    boundingBox.computeBoundingBox(transform, mesh.vertices);
+}
+
+void GameObject::initialize(const int id, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const Transform& transform, const Material& material, std::shared_ptr<GameObject> parent) {
+    this->id = id;
+    this->parent = parent;
+
+	this->transform = transform;
+	this->material = material;
+
+    this->mesh.vertices = vertices;
+	this->mesh.indices = indices;
+    this->mesh.initializeBuffers(this->mesh.vertices, this->mesh.indices);
+
+    boundingBox.computeBoundingBox(this->transform, mesh.vertices);
 }
 
 void GameObject::loadModel(const std::string& path) {
@@ -40,7 +56,7 @@ void GameObject::processNode(aiNode* node, const aiScene* scene) {
 
 void GameObject::processMesh(aiMesh* mesh, const aiScene* scene) {
     if (this->mesh.vertices.size() != 0) {
-        std::cout << "herer" << std::endl;
+        this->mesh.vertices.clear();
     }
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         this->mesh.vertices.push_back(mesh->mVertices[i].x);

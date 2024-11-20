@@ -24,6 +24,8 @@ public:
 
     void addGameObject(const std::string& path, const std::string& name);
 
+    void addGameObject(const GameObject& gameObject);
+
     void addLight(const std::string& type, glm::vec3 position);
 
     template <class Archive>
@@ -65,10 +67,8 @@ public:
         // Reconstruct the shared pointers from the plain objects
         this->gameObjects.clear();
         this->lights.clear();
-        for (const auto& obj : gameObjects) {
-            addGameObject(obj.path, obj.name);
-            this->gameObjects.back()->transform = obj.transform;
-            this->gameObjects.back()->material = obj.material;
+        for (const GameObject& obj : gameObjects) {
+            addGameObject(obj);
         }
         for (const auto& obj : lights) {
             addLight(obj.type, obj.transform.position);

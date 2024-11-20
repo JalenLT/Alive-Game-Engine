@@ -19,3 +19,9 @@ void Transform::rotateAroundAxisAngle(glm::vec3 axis, float angle) {
     rotation = rotation * quaternion;
     rotation = glm::normalize(rotation);
 }
+
+glm::vec3 Transform::applyToPoint(const glm::vec3& point) const {
+    glm::mat4 modelMatrix = getMatrix(); // Assumes you have a function to get the full model matrix
+    glm::vec4 transformedPoint = modelMatrix * glm::vec4(point, 1.0f);
+    return glm::vec3(transformedPoint);
+}

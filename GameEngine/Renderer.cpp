@@ -86,7 +86,7 @@ void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& v
 	glUniform3f(colorLocation, 0.0f, 1.0f, 0.0f); // Set line color to green
 
 	glBindVertexArray(mesh.VAO);
-	glDrawArrays(GL_LINES, 0, 2); // Draw the line with 2 vertices
+	glDrawArrays(GL_LINES, 0, mesh.vertices.size() / 3);
 	glBindVertexArray(0);
 
 	glEnable(GL_DEPTH_TEST);

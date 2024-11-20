@@ -33,13 +33,6 @@ int main() {
             "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\lineFragmentShader.glsl"
         );
 
-        Mesh lineMesh{};
-        lineMesh.vertices = {
-            -2.0f, -2.0f, 0.0f,  // Vertex 1
-             2.0f,  2.0f, 0.0f   // Vertex 2
-        };
-        lineMesh.initializeBuffers(lineMesh.vertices);
-
         sceneManager.initialize();
         sceneManager.currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
         sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
@@ -51,6 +44,20 @@ int main() {
 
             EventManager::getInstance().notifyObservers(data);
         }
+
+        //sceneManager.currentScene->gameObjects[0]->boundingBox.computeBoundingBoxVertices();
+        //Mesh lineMesh{};
+        //lineMesh.vertices = {
+        //    -2.0f, -2.0f, 0.0f,  // Vertex 1
+        //     2.0f,  2.0f, 0.0f   // Vertex 2
+        //};
+        //lineMesh.initializeBuffers(lineMesh.vertices);
+
+        //for (const auto& vertex : lineMesh.vertices) {
+        //    std::cout << vertex << std::endl;
+        //}
+
+        //std::cout << lineMesh.vertices.size() << std::endl;
 
         while (!glfwWindowShouldClose(window)) {
             auto frameStartTime = std::chrono::steady_clock::now();
@@ -71,7 +78,7 @@ int main() {
             SceneManager::getInstance().currentScene->gameObjects[0]->transform.rotateAroundAxisAngle(glm::normalize(glm::vec3(0.0f, 1.0f, 1.0f)), 0.1f);
 
             renderer.render(SceneManager::getInstance().currentScene->gameObjects, SceneManager::getInstance().currentScene->lights);
-            renderer.renderMesh(lineMesh, sceneManager.currentScene->gameObjects[0]->transform.getMatrix(), renderer.getView(), renderer.getProjection());
+            renderer.renderMesh(sceneManager.currentScene->gameObjects[0]->boundingBox.mesh, sceneManager.currentScene->gameObjects[0]->transform.getMatrix(), renderer.getView(), renderer.getProjection());
 
             UserInterfaceManager::getInstance().render();
 

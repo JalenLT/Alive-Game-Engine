@@ -18,7 +18,7 @@ public:
 	glm::vec3 position;
 	glm::quat rotation;
 	glm::vec3 scale;
-
+    
     Transform();
 
     glm::mat4 getMatrix() const;
@@ -26,6 +26,8 @@ public:
     glm::vec3 getRotation();
 
     void rotateAroundAxisAngle(glm::vec3 axis, float angle);
+
+    glm::vec3 applyToPoint(const glm::vec3& point) const;
 
     template <class Archive>
     void serialize(Archive& ar) {
