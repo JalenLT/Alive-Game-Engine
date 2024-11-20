@@ -34,6 +34,8 @@ public:
 
 	void render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std::vector<std::shared_ptr<Light>>& lights);
 
+	void renderLines(const Mesh& mesh);
+
 	std::string readShaderSource(const char* shaderPath);
 
 	GLuint initializeShader(const char* shaderSource, GLenum shaderType);

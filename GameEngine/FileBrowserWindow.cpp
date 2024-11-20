@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Window.h"
 
-FileBrowserWindow::FileBrowserWindow(float x, float y, float width, float height) : UIWindow(x, y, width, height), basePath("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive"), currentPath("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive") {
+FileBrowserWindow::FileBrowserWindow(float x, float y, float width, float height) : UIWindow(x, y, width, height), basePath("C:\\Users\\USER\\AppData\\Roaming\\Alive"), currentPath("C:\\Users\\USER\\AppData\\Roaming\\Alive") {
 	createFolder(basePath + "\\GameObjects");
 	createFolder(basePath + "\\Materials");
 	createFolder(basePath + "\\Models");
