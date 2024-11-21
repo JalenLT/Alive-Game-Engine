@@ -68,31 +68,31 @@ void Renderer::render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std
 }
 
 void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
-	glUseProgram(lineShader);
+    glUseProgram(lineShader);
 
-	glDisable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
 
-	// Pass the same view and projection matrices to the line shader
-	GLint modelLoc = glGetUniformLocation(lineShader, "model");
-	GLint viewLoc = glGetUniformLocation(lineShader, "view");
-	GLint projectionLoc = glGetUniformLocation(lineShader, "projection");
+    // Pass the model, view, and projection matrices to the shader
+    GLint modelLoc = glGetUniformLocation(lineShader, "model");
+    GLint viewLoc = glGetUniformLocation(lineShader, "view");
+    GLint projectionLoc = glGetUniformLocation(lineShader, "projection");
 
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-	// Set the line color
-	GLint colorLocation = glGetUniformLocation(lineShader, "lineColor");
-	glUniform3f(colorLocation, 0.0f, 1.0f, 0.0f); // Set line color to green
+    // Set the line color
+    GLint colorLocation = glGetUniformLocation(lineShader, "lineColor");
+    glUniform3f(colorLocation, 0.0f, 1.0f, 0.0f); // Green color
 
-	glBindVertexArray(mesh.VAO);
-	glDrawArrays(GL_LINES, 0, mesh.vertices.size() / 3);
-	glBindVertexArray(0);
+    glBindVertexArray(mesh.VAO);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh.vertices.size() / 3));
+    glBindVertexArray(0);
 
-	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 
-	// Optionally, reset to no shader after rendering
-	glUseProgram(0);
+    // Optionally reset the shader program
+    glUseProgram(0);
 }
 
 std::string Renderer::readShaderSource(const char* shaderPath) {

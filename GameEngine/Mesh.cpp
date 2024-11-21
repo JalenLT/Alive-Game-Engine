@@ -2,7 +2,7 @@
 
 Mesh::Mesh() : VAO(0), VBO(0), EBO(0) {}
 
-void Mesh::initializeBuffers(std::vector<float> vertices, const std::vector<unsigned int>& indices, bool containsNormals) {
+void Mesh::initializeBuffers(std::vector<float>& vertices, const std::vector<unsigned int>& indices, bool containsNormals) {
     // OpenGL buffer setup (not serialized)
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);

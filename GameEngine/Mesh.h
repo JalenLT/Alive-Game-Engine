@@ -19,7 +19,7 @@ public:
 	std::vector<float> vertices;
 	std::vector<unsigned int> indices;
 
-	void initializeBuffers(std::vector<float> vertices, const std::vector<unsigned int>& indices = {}, bool containsNormals = true);
+	void initializeBuffers(std::vector<float>& vertices, const std::vector<unsigned int>& indices = {}, bool containsNormals = true);
 
 	template <class Archive>
 	void serialize(Archive& ar) {

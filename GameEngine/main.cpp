@@ -34,8 +34,8 @@ int main() {
         );
 
         sceneManager.initialize();
-        sceneManager.currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
-        sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
+        /*sceneManager.currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
+        sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));*/
 
         if (std::filesystem::exists("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json")) {
             sceneManager.loadSceneFromFile("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json");
