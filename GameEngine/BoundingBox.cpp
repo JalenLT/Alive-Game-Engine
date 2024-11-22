@@ -30,7 +30,7 @@ void BoundingBox::computeBoundingBox(Transform& transform, const std::vector<flo
     computeBoundingBoxVertices();
 
     this->mesh.vertices = this->vertices;
-    this->mesh.initializeBuffers(this->mesh.vertices);
+    this->mesh.initializeBuffers(this->mesh.vertices, {}, false);
 }
 
 void BoundingBox::computeBoundingBoxVertices() {
