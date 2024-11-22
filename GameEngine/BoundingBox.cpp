@@ -16,7 +16,8 @@ void BoundingBox::computeBoundingBox(Transform& transform, const std::vector<flo
         );
 
         // Transform to world space
-        glm::vec3 worldPosition = transform.applyToPoint(localPosition);
+        //glm::vec3 worldPosition = transform.applyToPoint(localPosition);
+        glm::vec3 worldPosition = localPosition;
 
         // Update min and max values
         min = glm::min(min, worldPosition);
@@ -26,6 +27,8 @@ void BoundingBox::computeBoundingBox(Transform& transform, const std::vector<flo
     // Store computed bounding box
     this->min = min;
     this->max = max;
+
+    std::cout << min.x << " " << min.y << " " << min.z << " - " << max.x << " " << max.y << " " << max.z << std::endl;
 
     computeBoundingBoxVertices();
 
