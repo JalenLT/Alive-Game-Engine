@@ -59,6 +59,50 @@ int main() {
 
         //std::cout << lineMesh.vertices.size() << std::endl;
 
+        /****************************************************************************************************
+         *** CREATING AND SAVING MESHES HERE (TO BE REMOVE ONCE A BASIC MESH CREATOR TOOL IS IMPLEMENTED) ***
+         ****************************************************************************************************/
+        std::vector<float> arrowXVertices = {
+            0.0f, 0.0f, 0.0f,
+            1.5f, 0.0f, 0.0f,
+
+            1.5f, 0.0f, 0.0f,
+            1.5f, 0.0f, -0.1f,
+
+            1.5f, 0.0f, -0.1f,
+            1.7f, 0.0f, 0.0f,
+
+            1.7f, 0.0f, 0.0f,
+            1.5f, 0.0f, 0.1f,
+
+            1.5f, 0.0f, 0.1f,
+            1.5f, 0.0f, 0.0f,
+
+            1.5f, 0.0f, 0.0f,
+            1.5f, 0.1f, 0.0f,
+
+            1.5f, 0.1f, 0.0f,
+            1.7f, 0.0f, 0.0f,
+
+            1.7f, 0.0f, 0.0f,
+            1.5f, -0.1f, 0.0f,
+
+            1.5f, -0.1f, 0.0f,
+            1.5f, 0.0f, 0.0f,
+
+            1.5f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f
+        };
+        Material greenMaterial;
+        greenMaterial.diffuse = glm::vec3(0.0f, 1.0f, 0.0f);
+        Material redMaterial;
+		redMaterial.diffuse = glm::vec3(1.0f, 0.0f, 0.0f);
+        Material blueMaterial;
+		blueMaterial.diffuse = glm::vec3(0.0f, 0.0f, 1.0f);
+        Mesh arrowXMesh{};
+        arrowXMesh.vertices = arrowXVertices;
+        arrowXMesh.initializeBuffers(arrowXMesh.vertices, {}, false);
+
         while (!glfwWindowShouldClose(window)) {
             auto frameStartTime = std::chrono::steady_clock::now();
             Window::getInstance().updateMousePosition();
@@ -78,7 +122,8 @@ int main() {
             SceneManager::getInstance().currentScene->gameObjects[0]->transform.rotateAroundAxisAngle(glm::normalize(glm::vec3(0.0f, 1.0f, 1.0f)), 0.1f);
 
             renderer.render(SceneManager::getInstance().currentScene->gameObjects, SceneManager::getInstance().currentScene->lights);
-            renderer.renderMesh(sceneManager.currentScene->gameObjects[0]->boundingBox.mesh, sceneManager.currentScene->gameObjects[0]->transform.getMatrix(), renderer.getView(), renderer.getProjection());
+            renderer.renderMesh(sceneManager.currentScene->gameObjects[0]->boundingBox.mesh, sceneManager.currentScene->gameObjects[0]->transform.getMatrix(), renderer.getView(), renderer.getProjection(), greenMaterial);
+            renderer.renderMesh(arrowXMesh, glm::translate(glm::mat4(1.0f), sceneManager.currentScene->gameObjects[0]->transform.position), renderer.getView(), renderer.getProjection(), redMaterial);
 
             UserInterfaceManager::getInstance().render();
 

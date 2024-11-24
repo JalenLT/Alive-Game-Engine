@@ -37,7 +37,7 @@ public:
 
 	void render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std::vector<std::shared_ptr<Light>>& lights);
 
-	void renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection);
+	void renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection, Material& material);
 
 	std::string readShaderSource(const char* shaderPath);
 

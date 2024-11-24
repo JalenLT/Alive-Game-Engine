@@ -67,7 +67,7 @@ void Renderer::render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std
 	glUseProgram(0);
 }
 
-void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
+void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection, Material& material) {
     glUseProgram(lineShader);
 
     glDisable(GL_DEPTH_TEST);
@@ -83,7 +83,7 @@ void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& v
 
     // Set the line color
     GLint colorLocation = glGetUniformLocation(lineShader, "lineColor");
-    glUniform3f(colorLocation, 0.0f, 1.0f, 0.0f); // Green color
+    glUniform3f(colorLocation, material.diffuse.x, material.diffuse.y, material.diffuse.z); // Green color
 
     glBindVertexArray(mesh.VAO);
     glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(mesh.vertices.size() / 3));
