@@ -7,6 +7,7 @@
 #include "serialization_utils.h"
 #include <thread>
 #include <chrono>
+#include "project_constants.h"
 
 int main() {
     try {
@@ -24,21 +25,21 @@ int main() {
         SceneManager& sceneManager = SceneManager::getInstance();
 
         renderer.defaultShader = renderer.createShaderProgram(
-            "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\defaultVertexShader.glsl",
-            "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\defaultFragmentShader.glsl"
+            (ROAMING_PATH + "\\" + PROJECT_NAME + "\\Shaders\\defaultVertexShader.glsl").c_str(),
+            (ROAMING_PATH + "\\" + PROJECT_NAME + "\\Shaders\\defaultFragmentShader.glsl").c_str()
         );
 
         renderer.lineShader = renderer.createShaderProgram(
-            "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\lineVertexShader.glsl",
-            "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\lineFragmentShader.glsl"
+            (ROAMING_PATH + "\\" + PROJECT_NAME + "\\Shaders\\lineVertexShader.glsl").c_str(),
+            (ROAMING_PATH + "\\" + PROJECT_NAME + "\\Shaders\\lineFragmentShader.glsl").c_str()
         );
 
         sceneManager.initialize();
-        sceneManager.currentScene->addGameObject("C:\\Users\\USER\\OneDrive\\Documents\\OneDrive\\Desktop\\cube-Jalen.obj", "Cube Original");
+        sceneManager.currentScene->addGameObject(DESKTOP_PATH + "\\cube-Jalen.obj", "Cube Original");
         sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
 
-        if (std::filesystem::exists("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json")) {
-            sceneManager.loadSceneFromFile("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json");
+        if (std::filesystem::exists(ROAMING_PATH + "\\" + PROJECT_NAME + "\\scene_save.json")) {
+            sceneManager.loadSceneFromFile(ROAMING_PATH + "\\" + PROJECT_NAME + "\\scene_save.json");
 
             EventData data{ EventType::RefreshSceneHierarchy };
 
@@ -98,7 +99,7 @@ int main() {
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
                 glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                 std::cout << "Ctrl + S pressed, saving scene..." << std::endl;
-                saveToFile(*sceneManager.currentScene, "C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
+                saveToFile(*sceneManager.currentScene, ROAMING_PATH + "\\" + PROJECT_NAME + "\\scene_save.json", "Scene");
             }
 
             UserInterfaceManager::getInstance().newFrame();
