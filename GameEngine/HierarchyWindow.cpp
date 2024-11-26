@@ -9,9 +9,7 @@ void HierarchyWindow::update(const EventData& data) {
     if (data.type == EventType::RefreshSceneHierarchy) {
         scene = SceneManager::getInstance().currentScene;
     }
-    else if (data.type == EventType::MouseLeftClicked) {
-        callback = nullptr;
-    }
+    else if (data.type == EventType::MouseLeftClicked) {}
     else if (data.type == EventType::MouseRightClicked) {
         callback = [this, data]() mutable {
             ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.086f, 0.098f, 0.145f, 1.0f));
@@ -23,8 +21,10 @@ void HierarchyWindow::update(const EventData& data) {
             ImGui::Begin("Hierarchy Menu", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse || ImGuiWindowFlags_NoTitleBar);
 
 			if (ImGui::Button("Add GameObject")) {
-				EventData data = { EventType::AddGameObject };
-				EventManager::getInstance().notifyObservers(data);
+                std::cout << "clicked add gameobject" << std::endl;
+                EventData data = { EventType::AddGameObject };
+                EventManager::getInstance().notifyObservers(data);
+                this->callback = nullptr;
 			}
 			if (ImGui::Button("Add Light")) {
 				EventData data = { EventType::AddLight };

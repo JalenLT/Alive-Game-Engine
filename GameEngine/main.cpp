@@ -23,6 +23,8 @@ int main() {
         Renderer& renderer = Renderer::getInstance();
         SceneManager& sceneManager = SceneManager::getInstance();
 
+        eventManager.addObserver(&sceneManager);
+
         renderer.defaultShader = renderer.createShaderProgram(
             "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\defaultVertexShader.glsl",
             "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\defaultFragmentShader.glsl"
@@ -108,8 +110,10 @@ int main() {
             SceneManager::getInstance().currentScene->gameObjects[0]->transform.rotateAroundAxisAngle(glm::normalize(glm::vec3(0.0f, 1.0f, 1.0f)), 0.1f);
 
             renderer.render(SceneManager::getInstance().currentScene->gameObjects, SceneManager::getInstance().currentScene->lights);
-            renderer.renderMesh(sceneManager.currentScene->gameObjects[0]->boundingBox.mesh, sceneManager.currentScene->gameObjects[0]->transform.getMatrix(), renderer.getView(), renderer.getProjection(), greenMaterial);
-            renderer.renderMesh(arrowXMesh, glm::translate(glm::mat4(1.0f), sceneManager.currentScene->gameObjects[0]->transform.position), renderer.getView(), renderer.getProjection(), redMaterial);
+            for (const auto& gameObject : SceneManager::getInstance().currentScene->gameObjects) {
+                renderer.renderMesh(gameObject->boundingBox.mesh, gameObject->transform.getMatrix(), renderer.getView(), renderer.getProjection(), greenMaterial);
+                renderer.renderMesh(arrowXMesh, glm::translate(glm::mat4(1.0f), gameObject->transform.position), renderer.getView(), renderer.getProjection(), redMaterial);
+            }
 
             UserInterfaceManager::getInstance().render();
 

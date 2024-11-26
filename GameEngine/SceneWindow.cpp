@@ -12,7 +12,9 @@ void SceneWindow::update(const EventData& data) {
 		Raycast raycast{ Window::getInstance().mouseX - x, Window::getInstance().mouseY - y, static_cast<int>(width), static_cast<int>(height), Renderer::getInstance().getProjection(), Renderer::getInstance().getView()};
 
 		for (const auto& gameObject : SceneManager::getInstance().currentScene->gameObjects) {
-			if (raycast.rayIntersectAABB(gameObject->boundingBox.min, gameObject->boundingBox.max)) {
+			glm::vec3 newMin = gameObject->boundingBox.min + gameObject->transform.position;
+			glm::vec3 newMax = gameObject->boundingBox.max + gameObject->transform.position;
+			if (raycast.rayIntersectAABB(newMin, newMax)) {
 				std::cout << "Ray has hit successfully" << std::endl;
 				EventData data = { EventType::GameObjectSelected };
 				data.gameObjectIndex = gameObject->id;

@@ -3,11 +3,13 @@
 #define SCENEMANAGER_H
 
 #include "Scene.h"
+#include "Observer.h"
+#include "EventManager.h"
 #include <memory>
 #include <string>
 #include "serialization_utils.h"
 
-class SceneManager {
+class SceneManager: public Observer {
 public:
 	std::shared_ptr<Scene> currentScene;
 
@@ -16,6 +18,8 @@ public:
 	void initialize();
 
 	void loadSceneFromFile(const std::string& filename);
+
+	void update(const EventData& data) override;
 
 private:
 	SceneManager();
