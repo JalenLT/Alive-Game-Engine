@@ -24,40 +24,26 @@ int main() {
         SceneManager& sceneManager = SceneManager::getInstance();
 
         renderer.defaultShader = renderer.createShaderProgram(
-            "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\defaultVertexShader.glsl",
-            "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\defaultFragmentShader.glsl"
+            "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\defaultVertexShader.glsl",
+            "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\defaultFragmentShader.glsl"
         );
 
         renderer.lineShader = renderer.createShaderProgram(
-            "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\lineVertexShader.glsl",
-            "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\Shaders\\lineFragmentShader.glsl"
+            "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\lineVertexShader.glsl",
+            "C:\\Users\\USER\\AppData\\Roaming\\Alive\\Shaders\\lineFragmentShader.glsl"
         );
 
         sceneManager.initialize();
-        /*sceneManager.currentScene->addGameObject("C:\\Users\\sseunarine\\OneDrive\\Desktop\\cube.obj", "Cube Original");
-        sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));*/
+        sceneManager.currentScene->addGameObject("C:\\Users\\USER\\OneDrive\\Documents\\OneDrive\\Desktop\\cube-Jalen.obj", "Cube Original");
+        sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
 
-        if (std::filesystem::exists("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json")) {
-            sceneManager.loadSceneFromFile("C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json");
+        if (std::filesystem::exists("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json")) {
+            sceneManager.loadSceneFromFile("C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json");
 
             EventData data{ EventType::RefreshSceneHierarchy };
 
             EventManager::getInstance().notifyObservers(data);
         }
-
-        //sceneManager.currentScene->gameObjects[0]->boundingBox.computeBoundingBoxVertices();
-        //Mesh lineMesh{};
-        //lineMesh.vertices = {
-        //    -2.0f, -2.0f, 0.0f,  // Vertex 1
-        //     2.0f,  2.0f, 0.0f   // Vertex 2
-        //};
-        //lineMesh.initializeBuffers(lineMesh.vertices);
-
-        //for (const auto& vertex : lineMesh.vertices) {
-        //    std::cout << vertex << std::endl;
-        //}
-
-        //std::cout << lineMesh.vertices.size() << std::endl;
 
         /****************************************************************************************************
          *** CREATING AND SAVING MESHES HERE (TO BE REMOVE ONCE A BASIC MESH CREATOR TOOL IS IMPLEMENTED) ***
@@ -112,7 +98,7 @@ int main() {
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
                 glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                 std::cout << "Ctrl + S pressed, saving scene..." << std::endl;
-                saveToFile(*sceneManager.currentScene, "C:\\Users\\sseunarine\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
+                saveToFile(*sceneManager.currentScene, "C:\\Users\\USER\\AppData\\Roaming\\Alive\\scene_save.json", "Scene");
             }
 
             UserInterfaceManager::getInstance().newFrame();

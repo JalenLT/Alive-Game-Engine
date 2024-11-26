@@ -14,7 +14,10 @@ enum class EventType {
 	RefreshSceneHierarchy,
 	GameObjectSelected,
 	LightSelected,
-	MouseClicked,
+	MouseLeftClicked,
+	MouseRightClicked,
+	AddGameObject,
+	AddLight,
 };
 
 struct EventData {

@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="FileBrowserWindow.cpp" />
@@ -136,14 +137,20 @@
     <ClCompile Include="InspectorWindow.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Raycast.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="Subject.h" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIWindow.cpp" />
+    <ClCompile Include="UserInterfaceManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="FileBrowserWindow.h" />
@@ -153,6 +160,7 @@
     <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Raycast.h" />
     <ClInclude Include="Renderer.h" />
@@ -160,6 +168,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="serialization_utils.h" />
+    <ClInclude Include="Tags.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UIWindow.h" />
     <ClInclude Include="UserInterfaceManager.h" />

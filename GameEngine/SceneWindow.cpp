@@ -7,7 +7,7 @@
 SceneWindow::SceneWindow(float x, float y, float width, float height) : UIWindow(x, y, width, height) {}
 
 void SceneWindow::update(const EventData& data) {
-	if (data.type == EventType::MouseClicked) {
+	if (data.type == EventType::MouseLeftClicked) {
 		std::cout << data.mousePosition.value()[0] << ", " << data.mousePosition.value()[1] << std::endl;
 		Raycast raycast{ Window::getInstance().mouseX - x, Window::getInstance().mouseY - y, static_cast<int>(width), static_cast<int>(height), Renderer::getInstance().getProjection(), Renderer::getInstance().getView()};
 

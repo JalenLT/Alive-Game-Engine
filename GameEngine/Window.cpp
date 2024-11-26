@@ -108,12 +108,18 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 
 void Window::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		EventData data = { EventType::MouseClicked };
+		EventData data = { EventType::MouseLeftClicked };
 		data.mousePosition = { Window::getInstance().mouseX, Window::getInstance().mouseY };
 
 		EventManager::getInstance().notifyObservers(data);
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {}
+	else if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+		EventData data = { EventType::MouseRightClicked };
+		data.mousePosition = { Window::getInstance().mouseX, Window::getInstance().mouseY };
+
+		EventManager::getInstance().notifyObservers(data);
+	}
 }
 
 void Window::updateMousePosition() {

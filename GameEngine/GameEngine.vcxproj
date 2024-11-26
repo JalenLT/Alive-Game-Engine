@@ -168,6 +168,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="serialization_utils.h" />
+    <ClInclude Include="Tags.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UIWindow.h" />
     <ClInclude Include="UserInterfaceManager.h" />

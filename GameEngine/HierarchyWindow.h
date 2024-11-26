@@ -6,6 +6,7 @@
 #include "Observer.h"
 #include "SceneManager.h"
 #include "EventManager.h"
+#include <functional>
 #include <memory>
 
 class HierarchyWindow : public UIWindow, public Observer {
@@ -17,6 +18,9 @@ public:
     void update(const EventData& data) override;
 	
 	void render() override;
+
+private:
+	std::function<void()> callback = nullptr;
 };
 
 #endif
