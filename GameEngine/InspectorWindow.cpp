@@ -85,18 +85,20 @@ void InspectorWindow::update(const EventData& data) {
 			else {
 				ImGui::Text("No file path available.");
 			}
-
-			};
+		};
 	}
 	else if (data.type == EventType::GameObjectSelected) {
 		callback = [this, data]() mutable {
 			GameObject* gameObject = SceneManager::getInstance().currentScene->gameObjects[data.gameObjectIndex.value()].get();
-			ImGui::Text(gameObject->name.c_str());
+			std::string gameObjectName = gameObject->name;
+			if (ImGui::InputText("Name", &gameObjectName[0], sizeof(gameObjectName))) {
+				gameObject->name = gameObjectName;
+			}
 			this->transform(gameObject->transform);
 			ImGui::NewLine();
 			ImGui::NewLine();
 			this->material(gameObject->material);
-			};
+		};
 	}
 	else if (data.type == EventType::LightSelected) {
 		callback = [this, data]() mutable {
@@ -106,7 +108,7 @@ void InspectorWindow::update(const EventData& data) {
 			ImGui::NewLine();
 			ImGui::NewLine();
 			this->material(light->material);
-			};
+		};
 	}
 }
 

@@ -91,6 +91,11 @@ int main() {
         Mesh arrowXMesh{};
         arrowXMesh.vertices = arrowXVertices;
         arrowXMesh.initializeBuffers(arrowXMesh.vertices, {}, false);
+        GameObject arrowXGameObject{};
+        arrowXGameObject.initialize(sceneManager.currentScene->gameObjects.size(), arrowXMesh.vertices, {}, Transform{}, redMaterial);
+        arrowXGameObject.name = "Arrow X";
+        saveToFile(arrowXGameObject, ROAMING_PATH + "\\" + PROJECT_NAME + "\\GameObjects\\" + arrowXGameObject.name + ".json", "GameObject");
+        sceneManager.currentScene->addGameObject(arrowXGameObject);
 
         while (!glfwWindowShouldClose(window)) {
             auto frameStartTime = std::chrono::steady_clock::now();

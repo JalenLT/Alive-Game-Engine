@@ -22,6 +22,9 @@ void SceneWindow::update(const EventData& data) {
 			}
 		}
 	}
+	else if (data.type == EventType::GameObjectSelected) {
+		GameObject& gameObject = *SceneManager::getInstance().currentScene->gameObjects[data.gameObjectIndex.value()].get();
+	}
 }
 
 void SceneWindow::render() {

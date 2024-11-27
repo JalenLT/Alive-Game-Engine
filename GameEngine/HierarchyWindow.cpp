@@ -9,7 +9,11 @@ void HierarchyWindow::update(const EventData& data) {
     if (data.type == EventType::RefreshSceneHierarchy) {
         scene = SceneManager::getInstance().currentScene;
     }
-    else if (data.type == EventType::MouseLeftClicked) {}
+    else if (data.type == EventType::MouseLeftClicked) {
+        if (!ImGui::IsAnyItemHovered()) {
+			callback = nullptr;
+        }
+    }
     else if (data.type == EventType::MouseRightClicked) {
         callback = [this, data]() mutable {
             ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.086f, 0.098f, 0.145f, 1.0f));
