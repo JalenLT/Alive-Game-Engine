@@ -18,7 +18,6 @@ void SceneManager::loadSceneFromFile(const std::string& filename) {
 
 void SceneManager::update(const EventData& data) {
 	if (data.type == EventType::AddGameObject) {
-		std::cout << "test" << std::endl;
 		const char* filePath = tinyfd_openFileDialog(
 			"Select a File",
 			"",
@@ -38,6 +37,10 @@ void SceneManager::update(const EventData& data) {
 			gameObject.name = fileName;
 			gameObject.loadModel(std::string(filePath));
 			this->currentScene->addGameObject(gameObject);
+
+			EventData data{ EventType::RefreshSceneHierarchy };
+
+			EventManager::getInstance().notifyObservers(data);
 		}
 	}
 }

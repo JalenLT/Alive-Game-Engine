@@ -16,8 +16,11 @@ void Scene::addGameObject(const std::string& path, const std::string& name) {
 
 void Scene::addGameObject(const GameObject& gameObject) {
     gameObjects.push_back(std::make_shared<GameObject>(gameObject));
-    gameObjects.back()->mesh.initializeBuffers(gameObjects.back()->mesh.vertices, gameObjects.back()->mesh.indices);
-    gameObjects.back()->boundingBox.computeBoundingBox(gameObjects.back()->transform, gameObjects.back()->mesh.vertices);
+    for (auto& subMesh : gameObjects.back()->mesh.subMeshes) {
+        subMesh.initializeBuffers(subMesh.vertices, subMesh.indices);
+    }
+    
+    gameObjects.back()->boundingBox.computeBoundingBox(gameObjects.back()->transform, gameObjects.back()->mesh);
 }
 
 void Scene::addLight(const std::string& type, glm::vec3 position) {

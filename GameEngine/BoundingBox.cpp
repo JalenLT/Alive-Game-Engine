@@ -2,38 +2,39 @@
 
 BoundingBox::BoundingBox() : min(glm::vec3(0.0f, 0.0f, 0.0f)), max(glm::vec3(0.0f, 0.0f, 0.0f)) {}
 
-void BoundingBox::computeBoundingBox(Transform& transform, const std::vector<float>& vertices) {
+void BoundingBox::computeBoundingBox(Transform& transform, const Mesh& mesh) {
     // Initialize min and max values
     glm::vec3 min = glm::vec3(std::numeric_limits<float>::max());
     glm::vec3 max = glm::vec3(std::numeric_limits<float>::lowest());
 
-    // Process vertices in groups of 3 (x, y, z)
-    for (size_t i = 0; i < vertices.size(); i += 3) {
-        glm::vec3 localPosition(
-            vertices[i],     // x
-            vertices[i + 1], // y
-            vertices[i + 2]  // z
-        );
+    for (auto& subMesh : mesh.subMeshes) {
+        // Process vertices in groups of 3 (x, y, z)
+        for (size_t i = 0; i < subMesh.vertices.size(); i += 3) {
+            glm::vec3 localPosition(
+                subMesh.vertices[i],     // x
+                subMesh.vertices[i + 1], // y
+                subMesh.vertices[i + 2]  // z
+            );
 
-        // Transform to world space
-        //glm::vec3 worldPosition = transform.applyToPoint(localPosition);
-        glm::vec3 worldPosition = localPosition;
+            // Transform to world space
+            //glm::vec3 worldPosition = transform.applyToPoint(localPosition);
+            glm::vec3 worldPosition = localPosition;
 
-        // Update min and max values
-        min = glm::min(min, worldPosition);
-        max = glm::max(max, worldPosition);
+            // Update min and max values
+            min = glm::min(min, worldPosition);
+            max = glm::max(max, worldPosition);
+        }
     }
 
     // Store computed bounding box
     this->min = min;
     this->max = max;
 
-    std::cout << min.x << " " << min.y << " " << min.z << " - " << max.x << " " << max.y << " " << max.z << std::endl;
-
     computeBoundingBoxVertices();
 
-    this->mesh.vertices = this->vertices;
-    this->mesh.initializeBuffers(this->mesh.vertices, {}, false);
+    this->mesh.subMeshes.push_back(SubMesh());
+    this->mesh.subMeshes.back().vertices = this->vertices;
+    this->mesh.subMeshes.back().initializeBuffers(this->mesh.subMeshes.back().vertices, {}, false);
 }
 
 void BoundingBox::computeBoundingBoxVertices() {

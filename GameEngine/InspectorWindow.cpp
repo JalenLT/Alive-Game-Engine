@@ -40,34 +40,34 @@ void InspectorWindow::transform(Transform& transform) {
 	ImGui::Columns(1);
 }
 
-void InspectorWindow::material(Material& material) {
+void InspectorWindow::material(Material& material, const std::string& uniqueID) {
 	ImGui::Text("Ambient: ");
 	ImGui::Columns(3);
-	ImGui::InputFloat("aR", &material.ambient.x, 0.1f);
+	ImGui::InputFloat(("R##a" + uniqueID).c_str(), &material.ambient.x, 0.1f);
 	ImGui::NextColumn();
-	ImGui::InputFloat("aG", &material.ambient.y, 0.1f);
+	ImGui::InputFloat(("G##a" + uniqueID).c_str(), &material.ambient.y, 0.1f);
 	ImGui::NextColumn();
-	ImGui::InputFloat("aB", &material.ambient.z, 0.1f);
+	ImGui::InputFloat(("B##a" + uniqueID).c_str(), &material.ambient.z, 0.1f);
 	ImGui::NextColumn();
 	ImGui::Columns(1);
 
 	ImGui::Text("Diffuse: ");
 	ImGui::Columns(3);
-	ImGui::InputFloat("dR", &material.diffuse.x, 0.1f);
+	ImGui::InputFloat(("R##d" + uniqueID).c_str(), &material.diffuse.x, 0.1f);
 	ImGui::NextColumn();
-	ImGui::InputFloat("dG", &material.diffuse.y, 0.1f);
+	ImGui::InputFloat(("G##d" + uniqueID).c_str(), &material.diffuse.y, 0.1f);
 	ImGui::NextColumn();
-	ImGui::InputFloat("dB", &material.diffuse.z, 0.1f);
+	ImGui::InputFloat(("B##d" + uniqueID).c_str(), &material.diffuse.z, 0.1f);
 	ImGui::NextColumn();
 	ImGui::Columns(1);
 
 	ImGui::Text("Specular: ");
 	ImGui::Columns(3);
-	ImGui::InputFloat("sR", &material.specular.x, 0.1f);
+	ImGui::InputFloat(("R##s" + uniqueID).c_str(), &material.specular.x, 0.1f);
 	ImGui::NextColumn();
-	ImGui::InputFloat("sG", &material.specular.y, 0.1f);
+	ImGui::InputFloat(("G##s" + uniqueID).c_str(), &material.specular.y, 0.1f);
 	ImGui::NextColumn();
-	ImGui::InputFloat("sB", &material.specular.z, 0.1f);
+	ImGui::InputFloat(("B##s" + uniqueID).c_str(), &material.specular.z, 0.1f);
 	ImGui::NextColumn();
 	ImGui::Columns(1);
 }
@@ -97,7 +97,9 @@ void InspectorWindow::update(const EventData& data) {
 			this->transform(gameObject->transform);
 			ImGui::NewLine();
 			ImGui::NewLine();
-			this->material(gameObject->material);
+			for(int i = 0; i < gameObject->mesh.subMeshes.size(); i++) {
+				this->material(gameObject->mesh.subMeshes[i].material, std::to_string(i));
+			}
 		};
 	}
 	else if (data.type == EventType::LightSelected) {
@@ -107,7 +109,7 @@ void InspectorWindow::update(const EventData& data) {
 			this->transform(light->transform);
 			ImGui::NewLine();
 			ImGui::NewLine();
-			this->material(light->material);
+			this->material(light->material, "1");
 		};
 	}
 }

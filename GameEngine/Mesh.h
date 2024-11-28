@@ -9,23 +9,19 @@
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/json.hpp>
+#include "SubMesh.h"
 
 class Mesh {
 public:
 	Mesh();
 	~Mesh() = default;
 
-	unsigned int VAO, VBO, EBO;
-	std::vector<float> vertices;
-	std::vector<unsigned int> indices;
-
-	void initializeBuffers(std::vector<float>& vertices, const std::vector<unsigned int>& indices = {}, bool containsNormals = true);
+	std::vector<SubMesh> subMeshes;
 
 	template <class Archive>
 	void serialize(Archive& ar) {
 		ar(
-			CEREAL_NVP(vertices),
-			CEREAL_NVP(indices)
+			CEREAL_NVP(subMeshes)
 		);
 	}
 };

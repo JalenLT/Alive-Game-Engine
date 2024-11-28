@@ -24,33 +24,38 @@ void Renderer::setView(glm::mat4 view) { this->view = view; }
 
 void Renderer::setProjection(glm::mat4 projection) { this->projection = projection; }
 
-void Renderer::passMatricesToShader(GLuint shaderProgram, GameObject& gameObject, Light& light) {
-	unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
-	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(gameObject.transform.getMatrix()));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(getView()));
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(getProjection()));
-
+void Renderer::prepareShaderData(GLuint shaderProgram, Light& light) {
 	// Position the light at the top-right
 	glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), light.transform.position[0], light.transform.position.y, light.transform.position.z);
 	// Set light colors to a cool blue
 	glUniform3f(glGetUniformLocation(shaderProgram, "lightAmbient"), light.material.ambient[0], light.material.ambient[1], light.material.ambient[2]);
 	glUniform3f(glGetUniformLocation(shaderProgram, "lightDiffuse"), light.material.diffuse[0], light.material.diffuse[1], light.material.diffuse[2]);
 	glUniform3f(glGetUniformLocation(shaderProgram, "lightSpecular"), light.material.specular[0], light.material.specular[1], light.material.specular[2]);
+}
 
+void Renderer::prepareShaderData(GLuint shaderProgram, SubMesh& subMesh) {
 	// Optionally, set material to a neutral or contrasting color
-	glUniform3f(glGetUniformLocation(shaderProgram, "materialAmbient"), gameObject.material.ambient.x, gameObject.material.ambient.y, gameObject.material.ambient.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, "materialDiffuse"), gameObject.material.diffuse.x, gameObject.material.diffuse.y, gameObject.material.diffuse.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, "materialSpecular"), gameObject.material.specular.x, gameObject.material.specular.y, gameObject.material.specular.z);
-	glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), gameObject.material.shininess);
+	glUniform3f(glGetUniformLocation(shaderProgram, "materialAmbient"), subMesh.material.ambient.x, subMesh.material.ambient.y, subMesh.material.ambient.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, "materialDiffuse"), subMesh.material.diffuse.x, subMesh.material.diffuse.y, subMesh.material.diffuse.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, "materialSpecular"), subMesh.material.specular.x, subMesh.material.specular.y, subMesh.material.specular.z);
+	glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), subMesh.material.shininess);
 
 	glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), 0.0f, 0.0f, -6.0f);
 }
 
-void Renderer::renderModel(unsigned int VAO, std::vector<unsigned int> indices) {
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+void Renderer::prepareShaderData(GLuint shaderProgram, Transform& transform) {
+	unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
+	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transform.getMatrix()));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(getView()));
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(getProjection()));
+	glUniform3f(glGetUniformLocation(shaderProgram, "viewPos"), 0.0f, 0.0f, -6.0f);
+}
+
+void Renderer::renderModel(SubMesh& subMesh) {
+	glBindVertexArray(subMesh.VAO);
+	glDrawElements(GL_TRIANGLES, subMesh.indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
@@ -59,15 +64,19 @@ void Renderer::render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std
 
 	// First pass: Render the Phong-shaded cube
 	for (auto& gameObject : gameObjects) {
-		passMatricesToShader(defaultShader, *gameObject, *lights[0]);
-		renderModel(gameObject->mesh.VAO, gameObject->mesh.indices);
+		for (auto& subMesh : gameObject->mesh.subMeshes) {
+			prepareShaderData(defaultShader, gameObject->transform);
+			prepareShaderData(defaultShader, *lights[0]);
+			prepareShaderData(defaultShader, subMesh);
+			renderModel(subMesh);
+		}
 	}
 
 	// Optionally, reset to no shader after rendering
 	glUseProgram(0);
 }
 
-void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection, Material& material) {
+void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
     glUseProgram(lineShader);
 
     glDisable(GL_DEPTH_TEST);
@@ -81,13 +90,15 @@ void Renderer::renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& v
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-    // Set the line color
-    GLint colorLocation = glGetUniformLocation(lineShader, "lineColor");
-    glUniform3f(colorLocation, material.diffuse.x, material.diffuse.y, material.diffuse.z); // Green color
+	for (auto& subMesh : mesh.subMeshes) {
+		// Set the line color
+		GLint colorLocation = glGetUniformLocation(lineShader, "lineColor");
+		glUniform3f(colorLocation, subMesh.material.diffuse.x, subMesh.material.diffuse.y, subMesh.material.diffuse.z); // Green color
 
-    glBindVertexArray(mesh.VAO);
-    glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(mesh.vertices.size() / 3));
-    glBindVertexArray(0);
+		glBindVertexArray(subMesh.VAO);
+		glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(subMesh.vertices.size() / 3));
+		glBindVertexArray(0);
+	}
 
     glEnable(GL_DEPTH_TEST);
 

@@ -10,6 +10,7 @@
 #include "assimp/scene.h"
 #include "Mesh.h"
 #include "BoundingBox.h"
+#include "Tags.h"
 #include <cereal/types/vector.hpp>
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/memory.hpp>
@@ -27,9 +28,9 @@ public:
     std::string path;
     std::weak_ptr<GameObject> parent; // Changed from raw pointer to std::weak_ptr
     Transform transform;
-    Material material;
     Mesh mesh;
     BoundingBox boundingBox;
+    std::vector<Tags> tags;
 
     GameObject();
     ~GameObject();
@@ -38,7 +39,7 @@ public:
 
     void initialize(const int id, const std::string& path, std::shared_ptr<GameObject> parent = nullptr);
 
-    void initialize(const int id, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const Transform& transform, const Material& material, std::shared_ptr<GameObject> parent = nullptr);
+    void initialize(const int id, const Mesh mesh, const Transform& transform, std::shared_ptr<GameObject> parent = nullptr);
 
     void loadModel(const std::string& path);
 
@@ -53,7 +54,6 @@ public:
             CEREAL_NVP(name),
             CEREAL_NVP(path),
             CEREAL_NVP(transform),
-            CEREAL_NVP(material),
             CEREAL_NVP(mesh),
             CEREAL_NVP(boundingBox)
         );

@@ -21,7 +21,7 @@ public:
 
 	void transform(Transform& transform);
 
-	void material(Material& material);
+	void material(Material& material, const std::string& uniqueID);
 
 	void update(const EventData& data) override;
 	

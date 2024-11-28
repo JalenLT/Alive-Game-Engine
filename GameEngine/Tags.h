@@ -4,6 +4,8 @@
 
 enum class Tags {
     CanRender,
+    RenderSolid,
+    RenderLine,
     CanSelect
 };
 

@@ -31,13 +31,17 @@ public:
 
 	void setProjection(glm::mat4 projection);
 
-	void passMatricesToShader(GLuint shaderProgram, GameObject& gameObject, Light& light);
+	void prepareShaderData(GLuint shaderProgram, Light& light);
 
-	void renderModel(unsigned int VAO, std::vector<unsigned int>);
+	void prepareShaderData(GLuint shaderProgram, SubMesh& subMesh);
+
+	void prepareShaderData(GLuint shaderProgram, Transform& transform);
+
+	void renderModel(SubMesh& subMesh);
 
 	void render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std::vector<std::shared_ptr<Light>>& lights);
 
-	void renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection, Material& material);
+	void renderMesh(Mesh& mesh, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection);
 
 	std::string readShaderSource(const char* shaderPath);
 

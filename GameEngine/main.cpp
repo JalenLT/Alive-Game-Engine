@@ -37,7 +37,6 @@ int main() {
         );
 
         sceneManager.initialize();
-        sceneManager.currentScene->addGameObject(DESKTOP_PATH + "\\cube-Jalen.obj", "Cube Original");
         sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
 
         if (std::filesystem::exists(ROAMING_PATH + "\\" + PROJECT_NAME + "\\scene_save.json")) {
@@ -51,52 +50,12 @@ int main() {
         /****************************************************************************************************
          *** CREATING AND SAVING MESHES HERE (TO BE REMOVE ONCE A BASIC MESH CREATOR TOOL IS IMPLEMENTED) ***
          ****************************************************************************************************/
-        std::vector<float> arrowXVertices = {
-            0.0f, 0.0f, 0.0f,
-            1.5f, 0.0f, 0.0f,
-
-            1.5f, 0.0f, 0.0f,
-            1.5f, 0.0f, -0.1f,
-
-            1.5f, 0.0f, -0.1f,
-            1.7f, 0.0f, 0.0f,
-
-            1.7f, 0.0f, 0.0f,
-            1.5f, 0.0f, 0.1f,
-
-            1.5f, 0.0f, 0.1f,
-            1.5f, 0.0f, 0.0f,
-
-            1.5f, 0.0f, 0.0f,
-            1.5f, 0.1f, 0.0f,
-
-            1.5f, 0.1f, 0.0f,
-            1.7f, 0.0f, 0.0f,
-
-            1.7f, 0.0f, 0.0f,
-            1.5f, -0.1f, 0.0f,
-
-            1.5f, -0.1f, 0.0f,
-            1.5f, 0.0f, 0.0f,
-
-            1.5f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f
-        };
         Material greenMaterial;
         greenMaterial.diffuse = glm::vec3(0.0f, 1.0f, 0.0f);
         Material redMaterial;
 		redMaterial.diffuse = glm::vec3(1.0f, 0.0f, 0.0f);
         Material blueMaterial;
 		blueMaterial.diffuse = glm::vec3(0.0f, 0.0f, 1.0f);
-        Mesh arrowXMesh{};
-        arrowXMesh.vertices = arrowXVertices;
-        arrowXMesh.initializeBuffers(arrowXMesh.vertices, {}, false);
-        GameObject arrowXGameObject{};
-        arrowXGameObject.initialize(sceneManager.currentScene->gameObjects.size(), arrowXMesh.vertices, {}, Transform{}, redMaterial);
-        arrowXGameObject.name = "Arrow X";
-        saveToFile(arrowXGameObject, ROAMING_PATH + "\\" + PROJECT_NAME + "\\GameObjects\\" + arrowXGameObject.name + ".json", "GameObject");
-        sceneManager.currentScene->addGameObject(arrowXGameObject);
-
         while (!glfwWindowShouldClose(window)) {
             auto frameStartTime = std::chrono::steady_clock::now();
             Window::getInstance().updateMousePosition();
@@ -113,12 +72,9 @@ int main() {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            SceneManager::getInstance().currentScene->gameObjects[0]->transform.rotateAroundAxisAngle(glm::normalize(glm::vec3(0.0f, 1.0f, 1.0f)), 0.1f);
-
             renderer.render(SceneManager::getInstance().currentScene->gameObjects, SceneManager::getInstance().currentScene->lights);
             for (const auto& gameObject : SceneManager::getInstance().currentScene->gameObjects) {
                 renderer.renderMesh(gameObject->boundingBox.mesh, gameObject->transform.getMatrix(), renderer.getView(), renderer.getProjection(), greenMaterial);
-                renderer.renderMesh(arrowXMesh, glm::translate(glm::mat4(1.0f), gameObject->transform.position), renderer.getView(), renderer.getProjection(), redMaterial);
             }
 
             UserInterfaceManager::getInstance().render();

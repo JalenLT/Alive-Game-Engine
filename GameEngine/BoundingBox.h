@@ -21,7 +21,7 @@ public:
 	BoundingBox();
 	~BoundingBox() = default;
 
-	void computeBoundingBox(Transform& transform, const std::vector<float>& vertices);
+	void computeBoundingBox(Transform& transform, const Mesh& mesh);
 
 	void computeBoundingBoxVertices();
 

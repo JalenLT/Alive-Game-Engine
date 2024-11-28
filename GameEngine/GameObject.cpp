@@ -15,21 +15,22 @@ void GameObject::initialize(const int id, const std::string& path, std::shared_p
 
     loadModel(path);
 
-    boundingBox.computeBoundingBox(transform, mesh.vertices);
+    boundingBox.computeBoundingBox(transform, mesh);
 }
 
-void GameObject::initialize(const int id, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const Transform& transform, const Material& material, std::shared_ptr<GameObject> parent) {
+void GameObject::initialize(const int id, const Mesh mesh, const Transform& transform, std::shared_ptr<GameObject> parent) {
     this->id = id;
     this->parent = parent;
 
 	this->transform = transform;
-	this->material = material;
 
-    this->mesh.vertices = vertices;
-	this->mesh.indices = indices;
-    this->mesh.initializeBuffers(this->mesh.vertices, this->mesh.indices);
+    this->mesh = mesh;
 
-    boundingBox.computeBoundingBox(this->transform, mesh.vertices);
+    for (auto& subMesh : this->mesh.subMeshes) {
+		subMesh.initializeBuffers(subMesh.vertices, subMesh.indices);
+	}
+
+    boundingBox.computeBoundingBox(this->transform, mesh);
 }
 
 void GameObject::loadModel(const std::string& path) {
@@ -44,7 +45,10 @@ void GameObject::loadModel(const std::string& path) {
 }
 
 void GameObject::processNode(aiNode* node, const aiScene* scene) {
+    std::cout << "Node NumMeshes: " << node->mNumMeshes << std::endl;
+
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
+        std::cout << "Node Mesh " << i << ": " << scene->mMeshes[node->mMeshes[i]] << std::endl;
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         processMesh(mesh, scene);
     }
@@ -55,27 +59,46 @@ void GameObject::processNode(aiNode* node, const aiScene* scene) {
 }
 
 void GameObject::processMesh(aiMesh* mesh, const aiScene* scene) {
-    if (this->mesh.vertices.size() != 0) {
-        this->mesh.vertices.clear();
+    this->mesh.subMeshes.push_back(SubMesh());
+    SubMesh& subMesh = this->mesh.subMeshes.back();
+
+    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    aiColor4D color;
+    if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_DIFFUSE, color)) {
+		subMesh.material.diffuse = glm::vec3(color.r, color.g, color.b);
     }
+    if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_AMBIENT, color)) {
+        subMesh.material.ambient = glm::vec3(color.r, color.g, color.b);
+    }
+    if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_SPECULAR, color)) {
+        subMesh.material.specular = glm::vec3(color.r, color.g, color.b);
+    }
+
+    if (subMesh.vertices.size() != 0) {
+        subMesh.vertices.clear();
+    }
+    
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        this->mesh.vertices.push_back(mesh->mVertices[i].x);
-        this->mesh.vertices.push_back(mesh->mVertices[i].y);
-        this->mesh.vertices.push_back(mesh->mVertices[i].z);
+        subMesh.vertices.push_back(mesh->mVertices[i].x);
+        subMesh.vertices.push_back(mesh->mVertices[i].y);
+        subMesh.vertices.push_back(mesh->mVertices[i].z);
 
         if (mesh->mNormals) {
-            this->mesh.vertices.push_back(mesh->mNormals[i].x);
-            this->mesh.vertices.push_back(mesh->mNormals[i].y);
-            this->mesh.vertices.push_back(mesh->mNormals[i].z);
+            subMesh.vertices.push_back(mesh->mNormals[i].x);
+            subMesh.vertices.push_back(mesh->mNormals[i].y);
+            subMesh.vertices.push_back(mesh->mNormals[i].z);
         }
     }
 
     for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
+
+        std::cout << mesh->mMaterialIndex << std::endl;
+
         for (unsigned int j = 0; j < face.mNumIndices; j++) {
-            this->mesh.indices.push_back(face.mIndices[j]);
+            subMesh.indices.push_back(face.mIndices[j]);
         }
     }
 
-    this->mesh.initializeBuffers(this->mesh.vertices, this->mesh.indices);
+    subMesh.initializeBuffers(subMesh.vertices, subMesh.indices);
 }

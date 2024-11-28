@@ -145,6 +145,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="Subject.h" />
+    <ClCompile Include="SubMesh.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIWindow.cpp" />
     <ClCompile Include="UserInterfaceManager.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="serialization_utils.h" />
+    <ClInclude Include="SubMesh.h" />
     <ClInclude Include="Tags.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UIWindow.h" />
