@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <memory>
 #include <vector>
+#include <array>
 #include "glm/mat4x4.hpp"
 
 enum class EventType {
@@ -18,6 +19,7 @@ enum class EventType {
 	MouseRightClicked,
 	AddGameObject,
 	AddLight,
+	UpdateTransform
 };
 
 struct EventData {
@@ -26,6 +28,9 @@ struct EventData {
 	std::optional<int> gameObjectIndex;
 	std::optional<int> lightIndex;
 	std::optional<std::vector<double>> mousePosition;
+	std::optional<glm::vec3> position;
+	std::optional<glm::vec3> rotation;
+	std::optional<glm::vec3> scale;
 
 	EventData(EventType eventType);
 };

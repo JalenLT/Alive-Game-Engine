@@ -65,6 +65,8 @@ void HierarchyWindow::render() {
             }
         }
         for (auto& gameObject : scene->gameObjects) {
+            if (gameObject->name == "__arrows") continue;
+
             bool isOpen = ImGui::TreeNode(gameObject->name.c_str());
 
             if (ImGui::IsItemClicked()) { // Check if clicked and not just toggled

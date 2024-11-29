@@ -15,15 +15,19 @@
 
 class Transform {
 public:
+    int parentId;
+    std::string parentType;
 	glm::vec3 position;
 	glm::quat rotation;
 	glm::vec3 scale;
     
-    Transform();
+    Transform(int parentId, std::string parentType);
 
     glm::mat4 getMatrix() const;
 
     glm::vec3 getRotation();
+
+    void setRotation(const glm::vec3& eulerAngles);
 
     void rotateAroundAxisAngle(glm::vec3 axis, float angle);
 

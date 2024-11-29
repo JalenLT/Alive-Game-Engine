@@ -2,8 +2,9 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include <glad/glad.h>
+#include <algorithm>
 
-GameObject::GameObject() : id(0), name("Cube"), path("tmp") {}
+GameObject::GameObject() : id(0), name("Cube"), path("tmp"), tags({Tags::CanRender, Tags::CanSelect, Tags::RenderSolid, Tags::RenderBoundingBox}), transform(0, "GameObject") {}
 GameObject::~GameObject() = default;
 
 void GameObject::update(const EventData& data) {}
@@ -12,6 +13,7 @@ void GameObject::initialize(const int id, const std::string& path, std::shared_p
     this->id = id;
     this->path = path;
     this->parent = parent;
+    this->transform.parentId = id;
 
     loadModel(path);
 
@@ -45,10 +47,7 @@ void GameObject::loadModel(const std::string& path) {
 }
 
 void GameObject::processNode(aiNode* node, const aiScene* scene) {
-    std::cout << "Node NumMeshes: " << node->mNumMeshes << std::endl;
-
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-        std::cout << "Node Mesh " << i << ": " << scene->mMeshes[node->mMeshes[i]] << std::endl;
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         processMesh(mesh, scene);
     }
@@ -93,12 +92,14 @@ void GameObject::processMesh(aiMesh* mesh, const aiScene* scene) {
     for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
 
-        std::cout << mesh->mMaterialIndex << std::endl;
-
         for (unsigned int j = 0; j < face.mNumIndices; j++) {
             subMesh.indices.push_back(face.mIndices[j]);
         }
     }
 
     subMesh.initializeBuffers(subMesh.vertices, subMesh.indices);
+}
+
+bool GameObject::containsTag(const std::vector<Tags>& tags, Tags tag) {
+    return std::find(tags.begin(), tags.end(), tag) != tags.end();
 }

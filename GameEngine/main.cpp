@@ -73,9 +73,6 @@ int main() {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             renderer.render(SceneManager::getInstance().currentScene->gameObjects, SceneManager::getInstance().currentScene->lights);
-            for (const auto& gameObject : SceneManager::getInstance().currentScene->gameObjects) {
-                renderer.renderMesh(gameObject->boundingBox.mesh, gameObject->transform.getMatrix(), renderer.getView(), renderer.getProjection(), greenMaterial);
-            }
 
             UserInterfaceManager::getInstance().render();
 

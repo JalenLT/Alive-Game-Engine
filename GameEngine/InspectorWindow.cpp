@@ -10,34 +10,37 @@ void InspectorWindow::transform(Transform& transform) {
 	glm::vec3 currentRotation = transform.getRotation();
 	glm::vec3 newRotation = currentRotation;
 
-	ImGui::Text("Position: ");
-	ImGui::Columns(3);
-	ImGui::InputFloat("lX", &transform.position[0], 0.1f);
-	ImGui::NextColumn();
-	ImGui::InputFloat("lY", &transform.position[1], 0.1f);
-	ImGui::NextColumn();
-	ImGui::InputFloat("lZ", &transform.position[2], 0.1f);
-	ImGui::NextColumn();
-	ImGui::Columns(1);
+	float position[3] = { transform.position[0], transform.position[1], transform.position[2] };
+	float rotation[3] = { currentRotation.x, currentRotation.y, currentRotation.z };
+	float scale[3] = { transform.scale[0], transform.scale[1], transform.scale[2] };
 
-	ImGui::Text("Rotation: ");
-	ImGui::Columns(3);
-	if (ImGui::InputFloat("rX", &newRotation.x, 0.02f)) {
-		float diffX = newRotation.x - currentRotation.x;
-		transform.rotateAroundAxisAngle(glm::vec3(1.0f, 0.0f, 0.0f), 360.0f * diffX);
+	if (ImGui::InputFloat3("Position", position)) {
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			EventData data = { EventType::UpdateTransform };
+			if(transform.parentType == "GameObject") data.gameObjectIndex = transform.parentId;
+			else if(transform.parentType == "Light") data.lightIndex = transform.parentId;
+			data.position = glm::vec3(position[0], position[1], position[2]);
+			EventManager::getInstance().notifyObservers(data);
+		}
 	}
-	ImGui::NextColumn();
-	if (ImGui::InputFloat("rY", &newRotation.y, 0.02f)) {
-		float diffY = newRotation.y - currentRotation.y;
-		transform.rotateAroundAxisAngle(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * diffY);
+	if (ImGui::InputFloat3("Rotation", rotation)) {
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			EventData data = { EventType::UpdateTransform };
+			if (transform.parentType == "GameObject") data.gameObjectIndex = transform.parentId;
+			else if (transform.parentType == "Light") data.lightIndex = transform.parentId;
+			data.rotation = glm::vec3(rotation[0], rotation[1], rotation[2]);
+			EventManager::getInstance().notifyObservers(data);
+		}
 	}
-	ImGui::NextColumn();
-	if (ImGui::InputFloat("rZ", &newRotation.z, 0.02f)) {
-		float diffZ = newRotation.z - currentRotation.z;
-		transform.rotateAroundAxisAngle(glm::vec3(0.0f, 0.0f, 1.0f), 360.0f * diffZ);
+	if (ImGui::InputFloat3("Scale", scale)) {
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			EventData data = { EventType::UpdateTransform };
+			if (transform.parentType == "GameObject") data.gameObjectIndex = transform.parentId;
+			else if (transform.parentType == "Light") data.lightIndex = transform.parentId;
+			data.scale = glm::vec3(scale[0], scale[1], scale[2]);
+			EventManager::getInstance().notifyObservers(data);
+		}
 	}
-	ImGui::NextColumn();
-	ImGui::Columns(1);
 }
 
 void InspectorWindow::material(Material& material, const std::string& uniqueID) {
@@ -70,6 +73,11 @@ void InspectorWindow::material(Material& material, const std::string& uniqueID) 
 	ImGui::InputFloat(("B##s" + uniqueID).c_str(), &material.specular.z, 0.1f);
 	ImGui::NextColumn();
 	ImGui::Columns(1);
+
+	/*float specularColor[3] = { material.specular.x, material.specular.y, material.specular.z };
+	if (ImGui::ColorPicker3("Specular Color", specularColor)) {
+		material.specular = glm::vec3(specularColor[0], specularColor[1], specularColor[2]);
+	}*/
 }
 
 void InspectorWindow::update(const EventData& data) {

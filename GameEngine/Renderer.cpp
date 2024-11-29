@@ -60,19 +60,25 @@ void Renderer::renderModel(SubMesh& subMesh) {
 }
 
 void Renderer::render(std::vector<std::shared_ptr<GameObject>>& gameObjects, std::vector<std::shared_ptr<Light>>& lights) {
-	glUseProgram(defaultShader);
-
-	// First pass: Render the Phong-shaded cube
 	for (auto& gameObject : gameObjects) {
-		for (auto& subMesh : gameObject->mesh.subMeshes) {
-			prepareShaderData(defaultShader, gameObject->transform);
-			prepareShaderData(defaultShader, *lights[0]);
-			prepareShaderData(defaultShader, subMesh);
-			renderModel(subMesh);
+		if (gameObject->containsTag(gameObject->tags, Tags::RenderSolid)) {
+			glUseProgram(defaultShader);
+
+			for (auto& subMesh : gameObject->mesh.subMeshes) {
+				prepareShaderData(defaultShader, gameObject->transform);
+				prepareShaderData(defaultShader, *lights[0]);
+				prepareShaderData(defaultShader, subMesh);
+				renderModel(subMesh);
+			}
+		}
+		else if (gameObject->containsTag(gameObject->tags, Tags::RenderLine)) {
+			renderMesh(gameObject->mesh, gameObject->transform.getMatrix(), getView(), getProjection());
+		}
+
+		if (gameObject->containsTag(gameObject->tags, Tags::RenderBoundingBox)) {
+			renderMesh(gameObject->boundingBox.mesh, gameObject->transform.getMatrix(), getView(), getProjection());
 		}
 	}
-
-	// Optionally, reset to no shader after rendering
 	glUseProgram(0);
 }
 

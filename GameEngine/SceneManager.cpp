@@ -32,15 +32,27 @@ void SceneManager::update(const EventData& data) {
 
 			std::string fileName = std::filesystem::path(fullPath).filename().string();
 
-			GameObject gameObject;
-			gameObject.id = this->currentScene->gameObjects.size();
-			gameObject.name = fileName;
-			gameObject.loadModel(std::string(filePath));
-			this->currentScene->addGameObject(gameObject);
+			this->currentScene->addGameObject(fullPath, fileName);
 
 			EventData data{ EventType::RefreshSceneHierarchy };
 
 			EventManager::getInstance().notifyObservers(data);
+		}
+	}
+	else if (data.type == EventType::UpdateTransform) {
+		if(data.gameObjectIndex.has_value()) {
+			std::shared_ptr<GameObject> gameObject = this->currentScene->gameObjects[data.gameObjectIndex.value()];
+			if (data.position.has_value()) {
+				gameObject->transform.position = data.position.value();
+				if (gameObject->children.size() > 0) {
+					std::cout << "Has Children" << std::endl;
+					for (auto& child : gameObject->children) {
+						glm::vec3 currentPosition = child.lock()->transform.position;
+						child.lock()->transform.position = gameObject->transform.position;
+						child.lock()->transform.position += currentPosition;
+					}
+				}
+			}
 		}
 	}
 }

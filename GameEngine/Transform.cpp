@@ -1,7 +1,7 @@
 #include "Transform.h"
 
-Transform::Transform()
-    : position(0.0f), rotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f)), scale(1.0f) {}
+Transform::Transform(int parentId, std::string parentType)
+    : parentId(parentId), parentType(parentType), position(0.0f), rotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f)), scale(1.0f) {}
 
 glm::mat4 Transform::getMatrix() const {
     glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
@@ -13,6 +13,12 @@ glm::mat4 Transform::getMatrix() const {
 glm::vec3 Transform::getRotation() {
     return glm::degrees(glm::eulerAngles(rotation));
 }
+
+void Transform::setRotation(const glm::vec3& eulerAngles) {
+    glm::vec3 radians = glm::radians(eulerAngles);
+    rotation = glm::quat(radians);
+}
+
 
 void Transform::rotateAroundAxisAngle(glm::vec3 axis, float angle) {
     glm::quat quaternion = glm::angleAxis(glm::radians(angle), glm::normalize(axis));

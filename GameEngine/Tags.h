@@ -6,6 +6,7 @@ enum class Tags {
     CanRender,
     RenderSolid,
     RenderLine,
+    RenderBoundingBox,
     CanSelect
 };
 

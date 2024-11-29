@@ -27,6 +27,7 @@ public:
     std::string name;
     std::string path;
     std::weak_ptr<GameObject> parent; // Changed from raw pointer to std::weak_ptr
+    std::vector<std::weak_ptr<GameObject>> children;
     Transform transform;
     Mesh mesh;
     BoundingBox boundingBox;
@@ -46,6 +47,8 @@ public:
     void processNode(aiNode* node, const aiScene* scene);
 
     void processMesh(aiMesh* mesh, const aiScene* scene);
+
+    bool containsTag(const std::vector<Tags>& tags, Tags tag);
 
     template <class Archive>
     void serialize(Archive& ar) {
