@@ -29,6 +29,24 @@ public:
 
     void setRotation(const glm::vec3& eulerAngles);
 
+    glm::vec3 getLocalPosition(Transform& transform);
+    glm::vec3 getGlobalPosition();
+
+    void setLocalPosition(Transform& parentTransform, glm::vec3 localPosition);
+    void setGlobalPosition(glm::vec3 globalPosition);
+
+    void setGlobalRotation(const glm::quat& newRotation);
+    void setLocalRotation(Transform& parentTransform, const glm::quat& localRotation);
+
+    void setGlobalScale(const glm::vec3& newScale);
+    void setLocalScale(Transform& parentTransform, const glm::vec3& localScale);
+
+    glm::quat getGlobalRotation() const;
+    glm::quat getLocalRotation(const Transform& parentTransform) const;
+
+    glm::vec3 getGlobalScale() const;
+    glm::vec3 getLocalScale(const Transform& parentTransform) const;
+
     void rotateAroundAxisAngle(glm::vec3 axis, float angle);
 
     glm::vec3 applyToPoint(const glm::vec3& point) const;

@@ -53,6 +53,10 @@ void SceneManager::update(const EventData& data) {
 					}
 				}
 			}
+			else if (data.rotation.has_value()) {
+				gameObject->transform.setRotation(data.rotation.value());
+
+			}
 		}
 	}
 }
