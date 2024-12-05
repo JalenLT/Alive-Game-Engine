@@ -19,7 +19,11 @@ void InspectorWindow::transform(Transform& transform) {
 			EventData data = { EventType::UpdateTransform };
 			if(transform.parentType == "GameObject") data.gameObjectIndex = transform.parentId;
 			else if(transform.parentType == "Light") data.lightIndex = transform.parentId;
-			data.position = glm::vec3(position[0], position[1], position[2]);
+
+			glm::vec3 newPosition = glm::vec3(position[0], position[1], position[2]);
+			glm::vec3 deltaPosition = newPosition - transform.position;
+
+			data.position = deltaPosition;
 			EventManager::getInstance().notifyObservers(data);
 		}
 	}
@@ -28,7 +32,9 @@ void InspectorWindow::transform(Transform& transform) {
 			EventData data = { EventType::UpdateTransform };
 			if (transform.parentType == "GameObject") data.gameObjectIndex = transform.parentId;
 			else if (transform.parentType == "Light") data.lightIndex = transform.parentId;
-			data.rotation = glm::vec3(rotation[0], rotation[1], rotation[2]);
+			glm::vec3 rotationDegrees = glm::vec3(rotation[0], rotation[1], rotation[2]);
+			glm::vec3 rotationRadians = glm::radians(rotationDegrees);
+			data.rotation = glm::quat(rotationRadians);
 			EventManager::getInstance().notifyObservers(data);
 		}
 	}

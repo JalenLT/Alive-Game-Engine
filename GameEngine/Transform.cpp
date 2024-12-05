@@ -51,6 +51,10 @@ void Transform::setLocalRotation(Transform& parentTransform, const glm::quat& lo
     rotation = parentTransform.rotation * localRotation;
 }
 
+void Transform::translateGlobal(glm::vec3 translation) {
+    position = position + translation;
+}
+
 void Transform::setGlobalScale(const glm::vec3& newScale) {
     scale = newScale;
 }

@@ -25,31 +25,34 @@ public:
 
     glm::mat4 getMatrix() const;
 
-    glm::vec3 getRotation();
-
-    void setRotation(const glm::vec3& eulerAngles);
-
+    /****************
+     *** POSITION ***
+     ****************/
     glm::vec3 getLocalPosition(Transform& transform);
     glm::vec3 getGlobalPosition();
-
+    glm::vec3 applyToPoint(const glm::vec3& point) const;
     void setLocalPosition(Transform& parentTransform, glm::vec3 localPosition);
     void setGlobalPosition(glm::vec3 globalPosition);
+    void translateGlobal(glm::vec3 translation);
 
+    /****************
+     *** ROTATION ***
+     ****************/
+    glm::vec3 getRotation();
+    void setRotation(const glm::vec3& eulerAngles);
     void setGlobalRotation(const glm::quat& newRotation);
     void setLocalRotation(Transform& parentTransform, const glm::quat& localRotation);
-
-    void setGlobalScale(const glm::vec3& newScale);
-    void setLocalScale(Transform& parentTransform, const glm::vec3& localScale);
-
     glm::quat getGlobalRotation() const;
     glm::quat getLocalRotation(const Transform& parentTransform) const;
-
-    glm::vec3 getGlobalScale() const;
-    glm::vec3 getLocalScale(const Transform& parentTransform) const;
-
     void rotateAroundAxisAngle(glm::vec3 axis, float angle);
 
-    glm::vec3 applyToPoint(const glm::vec3& point) const;
+    /*************
+     *** SCALE ***
+     *************/
+    void setGlobalScale(const glm::vec3& newScale);
+    void setLocalScale(Transform& parentTransform, const glm::vec3& localScale);
+    glm::vec3 getGlobalScale() const;
+    glm::vec3 getLocalScale(const Transform& parentTransform) const;
 
     template <class Archive>
     void serialize(Archive& ar) {

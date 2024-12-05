@@ -39,13 +39,13 @@ int main() {
         sceneManager.initialize();
         sceneManager.currentScene->addLight("Point", glm::vec3(-2.0f, 0.0f, 2.0f));
 
-        if (std::filesystem::exists(ROAMING_PATH + "\\" + PROJECT_NAME + "\\scene_save.json")) {
+        /*if (std::filesystem::exists(ROAMING_PATH + "\\" + PROJECT_NAME + "\\scene_save.json")) {
             sceneManager.loadSceneFromFile(ROAMING_PATH + "\\" + PROJECT_NAME + "\\scene_save.json");
 
             EventData data{ EventType::RefreshSceneHierarchy };
 
             EventManager::getInstance().notifyObservers(data);
-        }
+        }*/
 
         /****************************************************************************************************
          *** CREATING AND SAVING MESHES HERE (TO BE REMOVE ONCE A BASIC MESH CREATOR TOOL IS IMPLEMENTED) ***

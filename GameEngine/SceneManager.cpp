@@ -43,18 +43,16 @@ void SceneManager::update(const EventData& data) {
 		if(data.gameObjectIndex.has_value()) {
 			std::shared_ptr<GameObject> gameObject = this->currentScene->gameObjects[data.gameObjectIndex.value()];
 			if (data.position.has_value()) {
-				gameObject->transform.position = data.position.value();
+				gameObject->transform.translateGlobal(data.position.value());
 				if (gameObject->children.size() > 0) {
 					std::cout << "Has Children" << std::endl;
 					for (auto& child : gameObject->children) {
-						glm::vec3 currentPosition = child.lock()->transform.position;
-						child.lock()->transform.position = gameObject->transform.position;
-						child.lock()->transform.position += currentPosition;
+						child.lock()->transform.translateGlobal(data.position.value());
 					}
 				}
 			}
 			else if (data.rotation.has_value()) {
-				gameObject->transform.setRotation(data.rotation.value());
+				gameObject->transform.setGlobalRotation(data.rotation.value());
 
 			}
 		}
