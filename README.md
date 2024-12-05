@@ -7,7 +7,6 @@ The Alive Game Engine is  a desktop application built in CPP whose purpose is to
 ![Alive GE - Example Image](Screenshots/example.png)
 
 ### Development Objective Checklist
-#### **Completed**
 #### Graphics
  - [x] Using OpenGL for rendering.
  - [x] Integrated GLFW for window creation and input handling.
